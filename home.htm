@@ -26,6 +26,7 @@
       <div class="row">
         <div class="col col-8">
           <p id="theUsersName">You are signed in!</p>
+          <div id="output"></div>
         </div>
 
         <div class="col col-4"></div>
@@ -46,6 +47,26 @@
             (document.getElementById('theUsersName').innerHTML =
               'Hi ' + data.display_name)
         );
+
+      fetch('https://api.spotify.com/v1/me/playlists', {
+        headers: {
+          Authorization: 'Bearer ' + accessToken
+        }
+      })
+        .then(res => res.json())
+        .then(data => {
+          let output = '<h2>Playlists</h2>';
+
+          data.items.forEach(function(names) {
+            console.log(names.name);
+            output += `
+          <ul>
+           <li>${names.name}
+            </ul>
+            `;
+          });
+          document.getElementById('output').innerHTML = output;
+        });
     </script>
   </body>
 </html>
