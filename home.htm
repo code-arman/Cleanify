@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
+
+    <title>Cleanify Home</title>
+  </head>
+
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <!-- <script src="frontend.js"></script> -->
+
+    <h1><a href="http://localhost:3000/"> Cleanify</a></h1>
+
+    <div class="container">
+      <div class="row">
+        <div class="col col-8">
+          <p id="theUsersName">You are signed in!</p>
+        </div>
+
+        <div class="col col-4"></div>
+      </div>
+    </div>
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const accessToken = urlParams.get('access_token');
+
+      fetch('https://api.spotify.com/v1/me', {
+        headers: {
+          Authorization: 'Bearer ' + accessToken
+        }
+      })
+        .then(res => res.json())
+        .then(
+          data =>
+            (document.getElementById('theUsersName').innerHTML =
+              'Hi ' + data.display_name)
+        );
+    </script>
+  </body>
+</html>
