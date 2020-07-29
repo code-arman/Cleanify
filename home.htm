@@ -58,30 +58,34 @@
         .then(res => res.json())
         .then(data => {
           let output = '<h2>Playlists</h2>';
-
+          let count = 0;
           data.items.forEach(function(names) {
+            count++;
             console.log(names.name);
+            console.log(count);
             output += `
           <ul style:"padding = 100px">
            <input type="checkbox" id = "${names.name}"><p>${names.name}</p>
             </ul>
+            
             `;
           });
           document.getElementById('output').innerHTML = output;
         });
 
-      let submit = document.getElementById('submit');
-
       //GET https://api.spotify.com/v1/me/playlists
 
-      function createPlaylist() {
+      function createPlaylist(playlistsName) {
         console.log('started playlist creation');
         fetch('https://api.spotify.com/v1/me/playlists', {
           method: 'POST',
-          contentType: 'application/json',
-
+          body: JSON.stringify({
+            name: playlistsName + ' (Cleanified)',
+            public: false
+          }),
           headers: {
-            Authorization: 'Bearer ' + accessToken
+            Authorization: 'Bearer ' + accessToken,
+            'Content-Type': 'application/json'
           }
         })
           .then(res => res.json())
@@ -90,8 +94,25 @@
             console.log('created playlist succesfully');
           });
       }
-
+      let submit = document.getElementById('submit');
       submit.addEventListener('click', createPlaylist, false);
+
+      var cbs = document.querySelectorAll('input');
+      for (var i = 0; i < cbs.length; i++) {
+        cbs[i].addEventListener('change', function() {
+          if (this.checked) console.log(this.value);
+        });
+      }
+
+      //      <script>
+      //        let ${names.name} = document.getElementById('${names.name}');
+      //      ${names.name}.addEventListener('click', logName, false);
+
+      //       function logName(){
+      //       console.log(${names.name})
+      //   }
+
+      // script end tag //
 
       //on submit button click, make post request to create playlist api
       //add songs

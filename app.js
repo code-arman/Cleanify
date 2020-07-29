@@ -23,7 +23,7 @@ app.listen(3000),
 
 app.get('/login', function(req, res) {
   var scopes =
-    'user-read-private user-read-email playlist-modify-public playlist-modify-private playlist-read-private playlist-read-collaborative';
+    'user-read-private user-read-email playlist-modify-public playlist-modify-private playlist-read-private playlist-read-collaborative ';
   res.redirect(
     'https://accounts.spotify.com/authorize' +
       '?response_type=code' +
