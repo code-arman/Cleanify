@@ -47,7 +47,7 @@
         .then(
           data =>
             (document.getElementById('theUsersName').innerHTML =
-              'Hi ' + data.display_name)
+              'Hi, ' + data.display_name)
         );
 
       fetch('https://api.spotify.com/v1/me/playlists', {
@@ -65,22 +65,32 @@
             console.log(count);
             output += `
           <ul style:"padding = 100px">
-           <input type="checkbox" id = "${names.name}"><p>${names.name}</p>
+          <input type = "radio" name="playlistTitles" value="${names.name}">${names.name}
+
             </ul>
-            
+
             `;
           });
           document.getElementById('output').innerHTML = output;
         });
-
+      // <input type="radio" > <label for="${names.name}"> </label>
       //GET https://api.spotify.com/v1/me/playlists
 
       function createPlaylist(playlistsName) {
         console.log('started playlist creation');
+        let newPlaylistName = '';
+
+        var ele = document.getElementsByName('playlistTitles');
+        for (i = 0; i < ele.length; i++) {
+          if (ele[i].checked) {
+            newPlaylistName = ele[i].value;
+          }
+        }
+
         fetch('https://api.spotify.com/v1/me/playlists', {
           method: 'POST',
           body: JSON.stringify({
-            name: playlistsName + ' (Cleanified)',
+            name: newPlaylistName + ' (Cleanified)',
             public: false
           }),
           headers: {
@@ -95,14 +105,8 @@
           });
       }
       let submit = document.getElementById('submit');
-      submit.addEventListener('click', createPlaylist, false);
 
-      var cbs = document.querySelectorAll('input');
-      for (var i = 0; i < cbs.length; i++) {
-        cbs[i].addEventListener('change', function() {
-          if (this.checked) console.log(this.value);
-        });
-      }
+      submit.addEventListener('click', createPlaylist, false);
 
       //      <script>
       //        let ${names.name} = document.getElementById('${names.name}');
