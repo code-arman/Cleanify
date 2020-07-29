@@ -10,6 +10,7 @@
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
       crossorigin="anonymous"
     />
+
     <link rel="stylesheet" href="style.css" />
 
     <title>Cleanify Home</title>
@@ -27,6 +28,7 @@
         <div class="col col-8">
           <p id="theUsersName">You are signed in!</p>
           <div id="output"></div>
+          <input id="submit" type="submit" value="Submit" />
         </div>
 
         <div class="col col-4"></div>
@@ -60,13 +62,39 @@
           data.items.forEach(function(names) {
             console.log(names.name);
             output += `
-          <ul>
-           <li>${names.name}
+          <ul style:"padding = 100px">
+           <input type="checkbox" id = "${names.name}"><p>${names.name}</p>
             </ul>
             `;
           });
           document.getElementById('output').innerHTML = output;
         });
+
+      let submit = document.getElementById('submit');
+
+      //GET https://api.spotify.com/v1/me/playlists
+
+      function createPlaylist() {
+        console.log('started playlist creation');
+        fetch('https://api.spotify.com/v1/me/playlists', {
+          method: 'POST',
+          contentType: 'application/json',
+
+          headers: {
+            Authorization: 'Bearer ' + accessToken
+          }
+        })
+          .then(res => res.json())
+          .then(data => {
+            console.log(data);
+            console.log('created playlist succesfully');
+          });
+      }
+
+      submit.addEventListener('click', createPlaylist, false);
+
+      //on submit button click, make post request to create playlist api
+      //add songs
     </script>
   </body>
 </html>
