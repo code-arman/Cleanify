@@ -21,12 +21,12 @@
 
     <!-- <script src="frontend.js"></script> -->
 
-    <h1><a href="http://localhost:3000/"> Cleanify</a></h1>
+    <h1><a href="http://localhost:3000/">Cleanify</a></h1>
 
     <div class="container">
       <div class="row">
         <div class="col col-8">
-          <p id="theUsersName">You are signed in!</p>
+          <p id="theUsersName">Signing in...</p>
           <div id="output"></div>
           <input id="submit" type="submit" value="Submit" />
         </div>
@@ -47,7 +47,7 @@
         .then(
           data =>
             (document.getElementById('theUsersName').innerHTML =
-              'Hi, ' + data.display_name)
+              'Signed in as ' + `<strong>${data.display_name}</strong`)
         );
 
       fetch('https://api.spotify.com/v1/me/playlists', {
@@ -61,36 +61,30 @@
           let count = 0;
           data.items.forEach(function(names) {
             count++;
-            console.log(names.name);
-            console.log(count);
             output += `
           <ul style:"padding = 100px">
           <input type = "radio" name="playlistTitles" value="${names.name}">${names.name}
-
             </ul>
-
             `;
           });
           document.getElementById('output').innerHTML = output;
         });
-      // <input type="radio" > <label for="${names.name}"> </label>
-      //GET https://api.spotify.com/v1/me/playlists
 
-      function createPlaylist(playlistsName) {
-        console.log('started playlist creation');
-        let newPlaylistName = '';
+      function createPlaylist() {
+        console.log('entered Playlist creation function');
+        let cleanifiedPlaylistName = '';
 
         var ele = document.getElementsByName('playlistTitles');
         for (i = 0; i < ele.length; i++) {
           if (ele[i].checked) {
-            newPlaylistName = ele[i].value;
+            cleanifiedPlaylistName = ele[i].value; //get the name of the checked playlist
           }
         }
 
         fetch('https://api.spotify.com/v1/me/playlists', {
           method: 'POST',
           body: JSON.stringify({
-            name: newPlaylistName + ' (Cleanified)',
+            name: cleanifiedPlaylistName + ' (Cleanified)',
             public: false
           }),
           headers: {
@@ -101,24 +95,13 @@
           .then(res => res.json())
           .then(data => {
             console.log(data);
-            console.log('created playlist succesfully');
+            console.log('Created playlist');
           });
       }
       let submit = document.getElementById('submit');
 
       submit.addEventListener('click', createPlaylist, false);
 
-      //      <script>
-      //        let ${names.name} = document.getElementById('${names.name}');
-      //      ${names.name}.addEventListener('click', logName, false);
-
-      //       function logName(){
-      //       console.log(${names.name})
-      //   }
-
-      // script end tag //
-
-      //on submit button click, make post request to create playlist api
       //add songs
     </script>
   </body>
