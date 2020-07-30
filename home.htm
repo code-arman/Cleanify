@@ -4,14 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="style.css" />
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
       crossorigin="anonymous"
     />
-
-    <link rel="stylesheet" href="style.css" />
 
     <title>Cleanify Home</title>
   </head>
@@ -27,9 +26,10 @@
       <div class="row">
         <div class="col col-8">
           <p id="theUsersName">Signing in...</p>
-          <div id="output"></div>
+          <div id="playlistItems"></div>
           <input id="submit" type="submit" value="Submit" />
         </div>
+        <div id="tracksInPlaylist"></div>
 
         <div class="col col-4"></div>
       </div>
@@ -57,34 +57,36 @@
       })
         .then(res => res.json())
         .then(data => {
-          let output = '<h2>Playlists</h2>';
+          console.log(data);
+          let playlistItems = '<h2>Playlists</h2>';
           let count = 0;
           data.items.forEach(function(names) {
             count++;
-            output += `
+            playlistItems += `
           <ul style:"padding = 100px">
-          <input type = "radio" name="playlistTitles" value="${names.name}">${names.name}
+          <input type = "radio" name="playlistTitles" id="${names.id}" value="${names.name}">${names.name}
             </ul>
             `;
           });
-          document.getElementById('output').innerHTML = output;
+          document.getElementById('playlistItems').innerHTML = playlistItems;
         });
 
       function createPlaylist() {
         console.log('entered Playlist creation function');
-        let cleanifiedPlaylistName = '';
-
+        let oldPlaylistName = '';
+        var OGPlaylistID;
         var ele = document.getElementsByName('playlistTitles');
         for (i = 0; i < ele.length; i++) {
           if (ele[i].checked) {
-            cleanifiedPlaylistName = ele[i].value; //get the name of the checked playlist
+            oldPlaylistName = ele[i].value; //get the name of the checked playlist
+            OGPlaylistID = ele[i].id; //get playlistID of checked playlist
           }
         }
 
         fetch('https://api.spotify.com/v1/me/playlists', {
           method: 'POST',
           body: JSON.stringify({
-            name: cleanifiedPlaylistName + ' (Cleanified)',
+            name: oldPlaylistName + ' (Cleanified)' + Math.random(),
             public: false
           }),
           headers: {
@@ -94,15 +96,46 @@
         })
           .then(res => res.json())
           .then(data => {
-            console.log(data);
             console.log('Created playlist');
           });
-      }
-      let submit = document.getElementById('submit');
 
+        //GET https://api.spotify.com/v1/playlists/{playlist_id}/tracks
+        //Get the tracks of the OG Playlist
+        fetch(`https://api.spotify.com/v1/playlists/${OGPlaylistID}/tracks`, {
+          headers: {
+            Authorization: 'Bearer ' + accessToken,
+            'Content-Type': 'application/json'
+          }
+        })
+          .then(res => res.json())
+          .then(data => {
+            console.log(data);
+            let tracksInPlaylist = `<h4>Tracks</h4>`;
+            data.items.forEach(function(names) {
+              console.log(names.track.name);
+              tracksInPlaylist += `
+            <ul style:"padding = 100px">
+            <li value="${names.track.name}" trackId="${names.track.id}">${names.track.name}  explicit = ${names.track.explicit}</li>
+              </ul>
+              `;
+            });
+            //
+            document.getElementById(
+              'tracksInPlaylist'
+            ).innerHTML = tracksInPlaylist;
+          });
+      }
+
+      let submit = document.getElementById('submit');
       submit.addEventListener('click', createPlaylist, false);
 
-      //add songs
+      //GET https://api.spotify.com/v1/search
+
+      //Get a Playlist's Items
+
+      //Add Items to a Playlist
+
+      //POST https://api.spotify.com/v1/playlists/{playlist_id}/tracks
     </script>
   </body>
 </html>
