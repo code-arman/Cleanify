@@ -27,7 +27,13 @@
         <div class="col col-8">
           <p id="theUsersName">Signing in...</p>
           <div id="playlistItems"></div>
-          <input id="submit" type="submit" value="Submit" />
+          <input id="submit" type="submit" value="cleanify playlist" />
+          <input
+            style="margin-bottom: 100px"
+            id="delete"
+            type="submit"
+            value="delete playlist"
+          />
         </div>
         <div id="tracksInPlaylist"></div>
 
@@ -35,58 +41,117 @@
       </div>
     </div>
     <script>
+      //for later: //GET https://api.spotify.com/v1/search
+
+      //gets the accessToken from the search bar paramater
       const urlParams = new URLSearchParams(window.location.search);
       const accessToken = urlParams.get('access_token');
 
-      fetch('https://api.spotify.com/v1/me', {
-        headers: {
-          Authorization: 'Bearer ' + accessToken
-        }
-      })
-        .then(res => res.json())
-        .then(
-          data =>
-            (document.getElementById('theUsersName').innerHTML =
-              'Signed in as ' + `<strong>${data.display_name}</strong`)
-        );
+      getSpotifyUsername();
+      getPlaylists();
 
-      fetch('https://api.spotify.com/v1/me/playlists', {
-        headers: {
-          Authorization: 'Bearer ' + accessToken
-        }
-      })
-        .then(res => res.json())
-        .then(data => {
-          console.log(data);
-          let playlistItems = '<h2>Playlists</h2>';
-          let count = 0;
-          data.items.forEach(function(names) {
-            count++;
-            playlistItems += `
+      let submit = document.getElementById('submit');
+      submit.addEventListener('click', createCleanifiedPlaylist, false);
+
+      let deleted = document.getElementById('delete');
+      deleted.addEventListener(
+        'click',
+        deletePlaylist(getCheckedPlaylistID),
+        false
+      );
+
+      //Get's spotify username of the person whos account you are logged into
+      function getSpotifyUsername() {
+        fetch('https://api.spotify.com/v1/me', {
+          headers: {
+            Authorization: 'Bearer ' + accessToken
+          }
+        })
+          .then(res => res.json())
+          .then(
+            data =>
+              (document.getElementById('theUsersName').innerHTML =
+                'Signed in as ' + `<strong>${data.display_name}</strong`)
+          );
+      }
+
+      //Get's all playlists that the user follows
+      function getPlaylists() {
+        fetch('https://api.spotify.com/v1/me/playlists', {
+          headers: {
+            Authorization: 'Bearer ' + accessToken
+          }
+        })
+          .then(res => res.json())
+          .then(data => {
+            console.log(data);
+            let playlistItems = '<h2>Playlists</h2>';
+            let count = 0;
+            data.items.forEach(function(names) {
+              count++;
+              playlistItems += `
           <ul style:"padding = 100px">
           <input type = "radio" name="playlistTitles" id="${names.id}" value="${names.name}">${names.name}
             </ul>
             `;
+            });
+            document.getElementById('playlistItems').innerHTML = playlistItems;
           });
-          document.getElementById('playlistItems').innerHTML = playlistItems;
-        });
+      }
 
-      function createPlaylist() {
-        console.log('entered Playlist creation function');
+      function deletePlaylist(playlistID) {
+        fetch(`https://api.spotify.com/v1/playlists/${playlistID}/`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: 'Bearer ' + accessToken
+          }
+        })
+          .then(res => res.json())
+          .then(data => {
+            console.log(data);
+            console.log(`successfully deleted playlist named: ${playlistID}`);
+          });
+      }
+
+      function getCheckedPlaylistID() {
+        let OGPlaylistID;
+        var ele = document.getElementsByName('playlistTitles');
+        for (i = 0; i < ele.length; i++) {
+          if (ele[i].checked) {
+            OGPlaylistID = ele[i].id; //get playlistID of checked playlist
+            console.log(OGPlaylistID);
+            return OGPlaylistID;
+          }
+        }
+      }
+
+      function getCheckedPlaylistName() {
         let oldPlaylistName = '';
-        var OGPlaylistID;
+        let OGPlaylistID;
         var ele = document.getElementsByName('playlistTitles');
         for (i = 0; i < ele.length; i++) {
           if (ele[i].checked) {
             oldPlaylistName = ele[i].value; //get the name of the checked playlist
-            OGPlaylistID = ele[i].id; //get playlistID of checked playlist
+            console.log(oldPlaylistName);
+            return oldPlaylistName;
           }
         }
+      }
 
+      //once the "cleanify playlist button" is pressed, this function
+      //creates a new playlist based off of the existing playlists name, and
+      //it displays the tracks of the original playlist and shows which tracks
+      //are explicit
+
+      function createCleanifiedPlaylist() {
+        let checkedPlaylistName = getCheckedPlaylistName();
+        let checkedPlaylistID = getCheckedPlaylistID();
+
+        newlyCreatedPlaylistID = '';
         fetch('https://api.spotify.com/v1/me/playlists', {
           method: 'POST',
           body: JSON.stringify({
-            name: oldPlaylistName + ' (Cleanified)' + Math.random(),
+            name: checkedPlaylistName + ' (Cleanified)' + Math.random(),
             public: false
           }),
           headers: {
@@ -96,46 +161,64 @@
         })
           .then(res => res.json())
           .then(data => {
+            newlyCreatedPlaylistID = data.id;
+
+            //set a variable equal to the new playlist ID that you just made
             console.log('Created playlist');
           });
 
-        //GET https://api.spotify.com/v1/playlists/{playlist_id}/tracks
-        //Get the tracks of the OG Playlist
-        fetch(`https://api.spotify.com/v1/playlists/${OGPlaylistID}/tracks`, {
-          headers: {
-            Authorization: 'Bearer ' + accessToken,
-            'Content-Type': 'application/json'
+        //Gets the tracks of the OG Playlist
+        fetch(
+          `https://api.spotify.com/v1/playlists/${checkedPlaylistID}/tracks`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + accessToken,
+              'Content-Type': 'application/json'
+            }
           }
-        })
+        )
           .then(res => res.json())
           .then(data => {
             console.log(data);
             let tracksInPlaylist = `<h4>Tracks</h4>`;
+            var cleanTracks = '';
             data.items.forEach(function(names) {
-              console.log(names.track.name);
+              if (!names.track.explicit) {
+                cleanTracks += 'spotify%3Atrack%3A' + names.track.id + ',';
+              }
+
+              console.log(cleanTracks);
               tracksInPlaylist += `
-            <ul style:"padding = 100px">
-            <li value="${names.track.name}" trackId="${names.track.id}">${names.track.name}  explicit = ${names.track.explicit}</li>
-              </ul>
-              `;
+              <ul style:"padding = 100px">
+              <li name="trackTitles" trackId="${names.track.id}" explicit="${names.track.explicit}"">${names.track.name} <strong> explicit = ${names.track.explicit}</strong></li>
+                </ul>
+                `;
             });
             //
             document.getElementById(
               'tracksInPlaylist'
             ).innerHTML = tracksInPlaylist;
           });
+        // adding all of the tracks from OG playlist into Cleanified Playlist
+        fetch(
+          `https://api.spotify.com/v1/playlists/${newlyCreatedPlaylistID}/tracks`,
+          {
+            method: 'POST',
+            uris: JSON.stringify({
+              uri: cleanTracks
+            }),
+            headers: {
+              Authorization: 'Bearer ' + accessToken,
+              'Content-Type': 'application/json'
+            }
+          }
+        )
+          .then(res => res.json())
+          .then(data => {
+            console.log(data);
+            console.log('new songs added?');
+          });
       }
-
-      let submit = document.getElementById('submit');
-      submit.addEventListener('click', createPlaylist, false);
-
-      //GET https://api.spotify.com/v1/search
-
-      //Get a Playlist's Items
-
-      //Add Items to a Playlist
-
-      //POST https://api.spotify.com/v1/playlists/{playlist_id}/tracks
     </script>
   </body>
 </html>
