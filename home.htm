@@ -202,6 +202,7 @@
             ).innerHTML = tracksInPlaylist;
 
             addTracksIntoCleanfiedPlaylist(newPlaylistID, cleanTracks);
+            findCleanVersionOfSongs(checkedPlaylistID, newPlaylistID);
           });
 
         // adding all of the clean tracks from OG playlist into Cleanified Playlist
@@ -221,7 +222,88 @@
         })
           .then(res => res.json())
           .then(data => {
+            console.log('added Tracks Into Cleanfied Playlist:');
             console.log(data);
+          });
+      }
+
+      function findCleanVersionOfSongs(checkedPlaylistID, newPlaylistID) {
+        //add all of the explicit songs you want to look for into an array
+        fetch(
+          `https://api.spotify.com/v1/playlists/${checkedPlaylistID}/tracks`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + accessToken,
+              'Content-Type': 'application/json'
+            }
+          }
+        )
+          .then(res => res.json())
+          .then(data => {
+            let explicitTracks = [];
+            let count = 0;
+            data.items.forEach(function(names) {
+              if (names.track.explicit) {
+                count++;
+                explicitTracks.push(`${names.track.name} Clean`);
+              }
+            });
+            console.log(explicitTracks);
+            console.log(count);
+            for (i = 0; i < explicitTracks.length; i++) {
+              searchForSong(explicitTracks[i], newPlaylistID);
+            }
+          });
+      }
+
+      function searchForSong(songTitle, newPlaylistID) {
+        fetch(
+          ` https://api.spotify.com/v1/search?q=${songTitle}&type=playlist`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + accessToken,
+              'Content-Type': 'application/json'
+            }
+          }
+        )
+          .then(res => res.json())
+          .then(data => {
+            console.log('search for song result:');
+            if (data.playlists.items.length > 0) {
+              theRandomPlaylistWithCleanSongID = data.playlists.items[0].id;
+              //console.log(
+              //  `Playlist ID: ${theRandomPlaylistWithCleanSongID}, Playlist Name: ${data.playlists.items[0].name}`
+              // );
+              getFirstSongInPlaylist(
+                theRandomPlaylistWithCleanSongID,
+                songTitle,
+                newPlaylistID
+              );
+            }
+          });
+      }
+
+      function getFirstSongInPlaylist(playlistID, songTitle, newPlaylistID) {
+        fetch(`https://api.spotify.com/v1/playlists/${playlistID}/tracks`, {
+          headers: {
+            Authorization: 'Bearer ' + accessToken,
+            'Content-Type': 'application/json'
+          }
+        })
+          .then(res => res.json())
+          .then(data => {
+            let cleanTracks = [];
+
+            data.items.forEach(function(names) {
+              if (
+                !names.track.explicit &&
+                names.track.name === songTitle.slice(0, -6)
+              ) {
+                cleanTracks.push('spotify:track:' + names.track.id);
+              }
+            });
+            console.log(cleanTracks);
+            addTracksIntoCleanfiedPlaylist(newPlaylistID, cleanTracks);
           });
       }
 
