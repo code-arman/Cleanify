@@ -80,7 +80,6 @@
         })
           .then(res => res.json())
           .then(data => {
-            console.log(data);
             let playlistItems = '<h2>Playlists</h2>';
             let count = 0;
             data.items.forEach(function(names) {
@@ -109,11 +108,7 @@
           }
         )
           .then(res => res.json())
-          .then(data => {
-            console.log(
-              `successfully deleted playlist named: ${checkedPlaylistName}`
-            );
-          });
+          .then(data => {});
         alert(`Deleted playlist named: ${checkedPlaylistName}`);
         location.reload();
       }
@@ -124,7 +119,7 @@
         for (i = 0; i < ele.length; i++) {
           if (ele[i].checked) {
             OGPlaylistID = ele[i].id; //get playlistID of checked playlist
-            console.log(OGPlaylistID);
+
             return OGPlaylistID;
           }
         }
@@ -137,7 +132,7 @@
         for (i = 0; i < ele.length; i++) {
           if (ele[i].checked) {
             oldPlaylistName = ele[i].value; //get the name of the checked playlist
-            console.log(oldPlaylistName);
+
             return oldPlaylistName;
           }
         }
@@ -157,7 +152,10 @@
         fetch('https://api.spotify.com/v1/me/playlists', {
           method: 'POST',
           body: JSON.stringify({
-            name: checkedPlaylistName + ' (Cleanified)' + Math.random(),
+            name:
+              checkedPlaylistName +
+              ' (Cleanified)' +
+              Math.floor(Math.random() * (999 - 100 + 1) + 100), //add a random 3 digit number to ensure unique playlist names
             public: false
           }),
           headers: {
@@ -168,11 +166,11 @@
           .then(res => res.json())
           .then(data => {
             newlyCreatedPlaylistID = data.id;
-
-            //set a variable equal to the new playlist ID that you just made
-            console.log('Created playlist');
+            getAndDisplayTracks(checkedPlaylistID, newlyCreatedPlaylistID);
           });
+      }
 
+      function getAndDisplayTracks(checkedPlaylistID, newPlaylistID) {
         //Gets the tracks of the OG Playlist
         fetch(
           `https://api.spotify.com/v1/playlists/${checkedPlaylistID}/tracks`,
@@ -185,44 +183,45 @@
         )
           .then(res => res.json())
           .then(data => {
-            console.log(data);
-            let tracksInPlaylist = `<h4>Tracks</h4>`;
-            var cleanTracks = '';
+            let cleanTracks = [];
+            let tracksInPlaylist = `<h4>Tracks <i>(${data.total} tracks)</i></h4>`;
             data.items.forEach(function(names) {
               if (!names.track.explicit) {
-                cleanTracks += 'spotify%3Atrack%3A' + names.track.id + ',';
+                cleanTracks.push('spotify:track:' + names.track.id);
               }
 
-              console.log(cleanTracks);
               tracksInPlaylist += `
               <ul style:"padding = 100px">
-              <li name="trackTitles" trackId="${names.track.id}" explicit="${names.track.explicit}"">${names.track.name} <strong> explicit = ${names.track.explicit}</strong></li>
+              <li name="trackTitles" trackId="${names.track.id}" explicit="${names.track.explicit}">${names.track.name} <strong> explicit = ${names.track.explicit}</strong></li>
                 </ul>
                 `;
             });
-            //
+
             document.getElementById(
               'tracksInPlaylist'
             ).innerHTML = tracksInPlaylist;
+
+            addTracksIntoCleanfiedPlaylist(newPlaylistID, cleanTracks);
           });
+
         // adding all of the clean tracks from OG playlist into Cleanified Playlist
-        fetch(
-          `https://api.spotify.com/v1/playlists/${newlyCreatedPlaylistID}/tracks`,
-          {
-            method: 'POST',
-            uris: JSON.stringify({
-              uri: cleanTracks
-            }),
-            headers: {
-              Authorization: 'Bearer ' + accessToken,
-              'Content-Type': 'application/json'
-            }
+      }
+
+      function addTracksIntoCleanfiedPlaylist(playlistID, cleanTracks) {
+        //  `https://api.spotify.com/v1/playlists/5U74wGWvE7pepqLyYSklT1/tracks`,
+        fetch(`https://api.spotify.com/v1/playlists/${playlistID}/tracks`, {
+          method: 'POST',
+          body: JSON.stringify({
+            uris: cleanTracks
+          }),
+          headers: {
+            Authorization: 'Bearer ' + accessToken,
+            'Content-Type': 'application/json'
           }
-        )
+        })
           .then(res => res.json())
           .then(data => {
             console.log(data);
-            console.log('new songs added?');
           });
       }
 
