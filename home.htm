@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="style.css" />
+
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -13,36 +13,104 @@
     />
 
     <title>Cleanify Home</title>
+
+    <style>
+      h6 {
+        padding-top: 10px;
+      }
+      #container {
+        width: 100%;
+        height: 90%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #1db954;
+      }
+
+      h1 {
+        text-align: center;
+        padding: 0.25em;
+        font-family: 'Montserrat', sans-serif;
+      }
+      .container {
+        padding-top: 2em;
+      }
+      p {
+        font-size: 20px;
+        text-align: center;
+        font-family: 'Montserrat', sans-serif;
+      }
+    </style>
   </head>
 
   <body>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-    <!-- <script src="frontend.js"></script> -->
-
     <h1><a href="http://localhost:3000/">Cleanify</a></h1>
+
+ 
+    <p id="theUsersName">Signing in...</p>
 
     <div class="container">
       <div class="row">
-        <div class="col col-8">
-          <p id="theUsersName">Signing in...</p>
-          <div id="playlistItems"></div>
-          <input id="submit" type="submit" value="cleanify playlist" />
-          <input
-            style="margin-bottom: 100px"
-            id="delete"
-            type="submit"
-            value="delete playlist"
-          />
-        </div>
-        <div id="tracksInPlaylist"></div>
+        <div class="col-sm">
+          <div class="card" style="width: 20em;">
+          <div class="card-header">
+                <h3 style="text-align:center">Playlists</h3>
+              </div>
+                  <div id="playlistItems"  ></div>
+              </div>
+              <div class="p-2" ><input
+                id="submit"
+                type="submit"
+                class="btn btn-success"
+                value="Cleanify Playlist"
+              />
+            
+              <input
+              id="delete"
+              type="submit"
 
-        <div class="col col-4"></div>
+              class="btn btn-danger"
+              value="Delete Playlist"
+            /></div>
+            </div>
+            <div class="col-sm">
+        
+                <div class="card" style="width: 20em;" >
+                    <div class="card-header">
+                      <h3 style="text-align:center">Before Cleanified</h3>
+                    </div>
+                    <div id="tracksInPlaylist"></div>
+                  
+                
+                  </div>
+                </div>
+                  <div class="col-sm">
+ 
+              <div class="card" style="width: 20em;" >
+                  <div class="card-header">
+                    <h3 style="text-align:center">After Cleanified</h3>
+                  </div>
+                  <div id="tracksInNewPlaylist"></div>
+            </div>
+          </div>
+        </div>
       </div>
+      
+      </div>
+    
+           </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    
+      
+
     </div>
     <script>
-      //for later: //GET https://api.spotify.com/v1/search
-
       //gets the accessToken from the search bar paramater
       const urlParams = new URLSearchParams(window.location.search);
       const accessToken = urlParams.get('access_token');
@@ -80,14 +148,20 @@
         })
           .then(res => res.json())
           .then(data => {
-            let playlistItems = '<h2>Playlists</h2>';
+            console.log(data)
+            let playlistItems = '';
             let count = 0;
             data.items.forEach(function(names) {
               count++;
+              
+             
+             
               playlistItems += `
-          <ul style:"padding = 100px">
-          <input type = "radio" name="playlistTitles" id="${names.id}" value="${names.name}">${names.name}
-            </ul>
+             
+                  <ul class="list-group list-group-flush">
+                    <li class="list-group-item"> <input type = "radio" name="playlistTitles" id="${names.id}" value="${names.name}">  ${names.name}</li>
+                  </ul>
+           
             `;
             });
             document.getElementById('playlistItems').innerHTML = playlistItems;
@@ -168,7 +242,10 @@
             newlyCreatedPlaylistID = data.id;
             getAndDisplayTracks(checkedPlaylistID, newlyCreatedPlaylistID);
           });
-      }
+
+      
+      };
+    
 
       function getAndDisplayTracks(checkedPlaylistID, newPlaylistID) {
         //Gets the tracks of the OG Playlist
@@ -184,16 +261,18 @@
           .then(res => res.json())
           .then(data => {
             let cleanTracks = [];
-            let tracksInPlaylist = `<h4>Tracks <i>(${data.total} tracks)</i></h4>`;
+            let tracksInPlaylist = ``;
             data.items.forEach(function(names) {
               if (!names.track.explicit) {
                 cleanTracks.push('spotify:track:' + names.track.id);
               }
 
               tracksInPlaylist += `
-              <ul style:"padding = 100px">
-              <li name="trackTitles" trackId="${names.track.id}" explicit="${names.track.explicit}">${names.track.name} <strong> explicit = ${names.track.explicit}</strong></li>
+              <ul class="list-group list-group-flush">
+              <li  class="list-group-item" name="trackTitles" trackId="${names.track.id}" explicit="${names.track.explicit}">${names.track.name}</li>
                 </ul>
+
+    
                 `;
             });
 
@@ -203,10 +282,50 @@
 
             addTracksIntoCleanfiedPlaylist(newPlaylistID, cleanTracks);
             findCleanVersionOfSongs(checkedPlaylistID, newPlaylistID);
-          });
+            getAfterCleanified(newPlaylistID);
+           
+            //display "after cleanified"
+            
+        
 
-        // adding all of the clean tracks from OG playlist into Cleanified Playlist
-      }
+      });
+    }
+
+    function getAfterCleanified(newPlaylistID){
+      setTimeout(function () {
+      fetch(
+          `https://api.spotify.com/v1/playlists/${newPlaylistID}/tracks`,
+          {
+            headers: {
+              Authorization: 'Bearer ' + accessToken,
+              'Content-Type': 'application/json'
+            }
+          }
+        )
+          .then(res => res.json())
+          .then(data => {
+            let cleanTracks = [];
+            let tracksInNewPlaylist = ``;
+            data.items.forEach(function(names) {
+             console.log(data);
+
+              tracksInNewPlaylist += `
+              <ul class="list-group list-group-flush">
+              <li  class="list-group-item" name="trackTitles" trackId="${names.track.id}" explicit="${names.track.explicit}">${names.track.name}</li>
+                </ul>
+
+    
+                `;
+            });
+
+            document.getElementById(
+              'tracksInNewPlaylist'
+            ).innerHTML = tracksInNewPlaylist;
+          });
+          
+        }, 2000);
+    }
+
 
       function addTracksIntoCleanfiedPlaylist(playlistID, cleanTracks) {
         //  `https://api.spotify.com/v1/playlists/5U74wGWvE7pepqLyYSklT1/tracks`,

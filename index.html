@@ -4,9 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <base href="/" />
 
-    <link rel="stylesheet" href="/styles/style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -14,25 +17,43 @@
       crossorigin="anonymous"
     />
     <title>Login: Cleanify</title>
+    <style>
+      #container {
+        width: 100%;
+        height: 90%;
+        display: flex;
+        justify-content: center;
+        background-color: #1db954;
+      }
+
+      h1 {
+        padding: 0.25em;
+        text-align: center;
+      }
+      .container {
+        
+      }
+   
+    </style>
   </head>
   <body>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/frontend.js"></script>
 
-    <script src="frontend.js"></script>
-
-    <h1>
-      Cleanify
-    </h1>
+  
 
     <div class="container">
-      <div class="row">
-        <div class="col col-8">
-          <p>Login with Spotify:</p>
+        <div class="row">
+            <div class="col ">
+                <h1>Cleanify</h1>
+            </div>
+          </div>
+     
+   
+        <div class="row">
+
+        <div class="col text-center">
+          <a type="button" class="btn btn-success" href="/login">Log in with Spotify</a>
         </div>
-        <div class="col col-4">
-          <a type="button" class="btn btn-success" href="/login">Sign in</a>
-        </div>
-      </div>
     </div>
   </body>
 </html>
