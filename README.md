@@ -7,20 +7,33 @@ Cleanify converts your Explicit spotify playlists into Clean spotify playlists s
 ### How to run it:
 
 1. Login to your [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/applications)
-2. Create a new project and get your Client ID and Client Secret
+2. Create a "new app" and record your Client ID and Client Secret
 3. Go to "edit settings" within your project and set the Redirect URI to http://localhost:3000/callback and save
-4. Clone this github repo and open it
-5. Run the following npm commands (make sure you already have Node installed)
+4. Clone this github repo:
 
 ```
-npm install express
-npm install request
+cd Desktop
+git clone https://github.com/code-arman/Cleanify.git
+
+```
+
+5. Open the project in the Code editor of your choice and run the following npm command (make sure you already have [Node](https://nodejs.org/en/download/) installed)
+
+```
+npm install
 ```
 
 6. Replace the Client ID and Client Secret at the top of app.js with your own.
+
+```
+const my_client_id = ''; // Your Client ID
+const client_secret = ''; // Your secret
+```
+
 7. Run the following command
    `node app.js`
-8. Cleanify your playlists
+8. Go to `http://localhost:3000/` in your browser
+9. Login with Spotify and use the App
 
 ### How it works:
 
@@ -28,5 +41,10 @@ Cleanify sends a request to spotify's api for each song in the selected playlist
 
 ## How to use it
 
-<img src = "/cleanify-login.jpg">
-<img src = "/cleanify-home.jpg">
+<h6>Login Screen</h6>
+
+![Login](/cleanify-login-page.png)
+
+<h6>Cleanify Screen</h6>
+
+![Home](/cleanify-home.png)
