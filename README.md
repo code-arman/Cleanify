@@ -17,13 +17,13 @@ git clone https://github.com/code-arman/Cleanify.git
 cd Cleanify
 ```
 
-5. Open the project in the code editor of your choice (like [VScode](https://code.visualstudio.com/download)) and run the following npm command (make sure you already have [Node](https://nodejs.org/en/download/) installed)
+5. Once you're in the project directory in Terminal, run the following npm command (make sure you already have [Node](https://nodejs.org/en/download/) installed)
 
 ```
 npm install
 ```
 
-6. Add your Client ID and Client Secret that you got from your Spotify developer dashboard into terminal by running the following command. Replace your information wtih YOURCLIENTID and YOURCLIENTSECRET.
+6. Add your Client ID and Client Secret that you got from your Spotify developer dashboard into terminal by running the following commands. Replace your information wtih YOURCLIENTID and YOURCLIENTSECRET.
 
 ![Dashboard](/spotify-developer-dashboard-keys.png)
 
