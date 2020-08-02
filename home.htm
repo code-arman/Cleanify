@@ -153,7 +153,6 @@
         })
           .then(res => res.json())
           .then(data => {
-            console.log(data)
             let playlistItems = '';
             let count = 0;
             data.items.forEach(function(names) {
@@ -187,9 +186,13 @@
           }
         )
           .then(res => res.json())
-          .then(data => {});
-        //alert(`Deleted playlist named: ${checkedPlaylistName}`);
-        location.reload();
+          .then(data => {
+            
+          });
+          location.reload();
+          
+        alert(`Deleted playlist named: ${checkedPlaylistName}`);
+        
       }
 
       function getCheckedPlaylistID() {
@@ -268,7 +271,6 @@
             let tracksInPlaylist = ``;
             let totalTracks;
             data.items.forEach(function(names) {
-              console.log(data.total)
               if (!names.track.explicit) {
                 cleanTracks.push('spotify:track:' + names.track.id);
               }
@@ -313,7 +315,6 @@
             let cleanTracks = [];
             let tracksInNewPlaylist = ``;
             data.items.forEach(function(names) {
-             console.log(data);
 
               tracksInNewPlaylist += `
               <ul class="list-group list-group-flush">
@@ -349,8 +350,6 @@
         })
           .then(res => res.json())
           .then(data => {
-            console.log('added Tracks Into Cleanfied Playlist:');
-            console.log(data);
           });
       }
 
@@ -375,8 +374,6 @@
                 explicitTracks.push(`${names.track.name} Clean`);
               }
             });
-            console.log(explicitTracks);
-            console.log(count);
             for (i = 0; i < explicitTracks.length; i++) {
               searchForSong(explicitTracks[i], newPlaylistID);
             }
@@ -395,12 +392,9 @@
         )
           .then(res => res.json())
           .then(data => {
-            console.log('search for song result:');
             if (data.playlists.items.length > 0) {
               theRandomPlaylistWithCleanSongID = data.playlists.items[0].id;
-              //console.log(
-              //  `Playlist ID: ${theRandomPlaylistWithCleanSongID}, Playlist Name: ${data.playlists.items[0].name}`
-              // );
+             
               getFirstSongInPlaylist(
                 theRandomPlaylistWithCleanSongID,
                 songTitle,
@@ -429,7 +423,6 @@
                 cleanTracks.push('spotify:track:' + names.track.id);
               }
             });
-            console.log(cleanTracks);
             addTracksIntoCleanfiedPlaylist(newPlaylistID, cleanTracks);
           });
       }
@@ -439,7 +432,6 @@
       //go to the top result playlist and add first track in the playlist into the cleanified album
       //check if the name of the song you are added is equal to the song that you were originally looking for
 
-      //out of the non clean song: for each of them, search the name plus clean and add first result into cleanified playlist
     </script>
   </body>
 </html>
