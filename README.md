@@ -34,7 +34,7 @@ export CLIENT_SECRET=YOURCLIENTSECRET
 
 7. Run the following command
    `node app.js`
-8. Go to `http://localhost:3000/` in your browser
+8. Go to `http://localhost:3000/` in your browser (preferably Google Chrome)
 9. Login with Spotify and use the App
 
 ### How it works:
