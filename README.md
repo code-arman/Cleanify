@@ -40,6 +40,7 @@ const client_secret = ''; // Your secret
 Cleanify sends a request to spotify's api for each song in the selected playlist and the word "clean." Often times, users have created a playlist with the Clean version of that song, so it shows at the top of the search results. Cleanify then compares each song in this recenetly searched for playlist to the song that the user has in their own playlist, and adds it to a new 'Cleanified' playlist if it is both non-explicit and has the same name. There is no method to ensure all songs in the playlist have a clean version, but this application gives you the best chance at finding the clean version if it is there, and removes it if there is no clean version of the song. This will make it so when you want to listen to your playlist around your parents, the songs will not have swear words.
 
 ## How to use it
+
 <h6>Login Screen</h6>
 
 ![Login](/cleanify-login.png)
@@ -47,14 +48,3 @@ Cleanify sends a request to spotify's api for each song in the selected playlist
 <h6>Cleanify Screen</h6>
 
 ![Home](/cleanify-home.png)
-
-<<<<<<< HEAD
-<h6>Login Screen</h6>
-
-![Login](/cleanify-login-page.png)
-
-<h6>Cleanify Screen</h6>
-
-![Home](/cleanify-home.png)
-=======
->>>>>>> 50a8a9d8a32d9846bd6e2105d230f4f8f8545065
