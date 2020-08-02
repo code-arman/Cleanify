@@ -28,5 +28,6 @@ Cleanify sends a request to spotify's api for each song in the selected playlist
 
 ## How to use it
 
-<img src = "/cleanify-login.jpg">
-<img src = "/cleanify-home.jpg">
+![Login](/cleanify-login.png)
+![Home](/cleanify-home.png)
+
