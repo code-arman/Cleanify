@@ -2,7 +2,7 @@
 
 ### What it does:
 
-Cleanify converts your Explicit spotify playlists into Clean spotify playlists so you can list to your favorite playlists when your parents are around!
+Cleanify converts your Explicit spotify playlists into Clean spotify playlists so you can listen to your favorite playlists when your parents are around!
 
 ### How to run it:
 
