@@ -10,6 +10,7 @@ Cleanify converts your Explicit spotify playlists into Clean spotify playlists s
 2. Create a "new app" and record your Client ID and Client Secret
 3. Go to "edit settings" within your project and set the Redirect URI to http://localhost:3000/callback and save
 4. Clone this github repo or download the zip file. This example saves it to your desktop
+
 ```
 cd Desktop
 git clone https://github.com/code-arman/Cleanify.git
@@ -23,11 +24,13 @@ cd Cleanify
 npm install
 ```
 
-6. Replace the Client ID and Client Secret at the top of app.js with your that you get from your Spotify developer dashboard
+6. Add your Client ID and Client Secret that you got from your Spotify developer dashboard into terminal by running the following command. Replace your information wtih YOURCLIENTID and YOURCLIENTSECRET.
+
+![Dashboard](/spotify-developer-dashboard-keys.png)
 
 ```
-const my_client_id = ''; // Your Client ID
-const client_secret = ''; // Your secret
+export CLIENT_ID=YOURCLIENTID
+export CLIENT_SECRET=YOURCLIENTSECRET
 ```
 
 7. Run the following command
