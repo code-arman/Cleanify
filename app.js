@@ -1,12 +1,10 @@
 const express = require('express');
 const app = express();
-var queryString = require('query-string');
-var cookieParser = require('cookie-parser');
-let request = require('request');
+const request = require('request');
 
-const my_client_id = '90eb748bb57f4e21a621f6711ab46ee4';
-var client_secret = 'b1698dba49134a168c168739fdf31b08'; // Your secret
-var redirect_uri = 'http://localhost:3000/callback'; // Or Your redirect uri
+const my_client_id = ''; // Your Client ID
+const client_secret = ''; // Your secret
+const redirect_uri = 'http://localhost:3000/callback'; // Your redirect uri
 
 app.get('/index.html', (req, res) => {
   res.sendFile(__dirname + '/index.html');

@@ -50,14 +50,13 @@
                     
         <div class="card-body">
           <h1 class="card-title"><a href="http://localhost:3000/">Cleanify</a></h1>
-          <h5 class="card-text">Select a Playlist to Cleanify</h5>
+          <h5 class="card-text">Select a playlist to convert</h5>
         </div>
-          
-        </div>
+        <p id="theUsersName">Signing in...</p>
+
       </div>
 
  
-    
 
     <div class="container">
       <div class="row">
@@ -195,7 +194,7 @@
 
       function getCheckedPlaylistID() {
         let OGPlaylistID;
-        var ele = document.getElementsByName('playlistTitles');
+        let ele = document.getElementsByName('playlistTitles');
         for (i = 0; i < ele.length; i++) {
           if (ele[i].checked) {
             OGPlaylistID = ele[i].id; //get playlistID of checked playlist
@@ -208,7 +207,7 @@
       function getCheckedPlaylistName() {
         let oldPlaylistName = '';
         let OGPlaylistID;
-        var ele = document.getElementsByName('playlistTitles');
+        let ele = document.getElementsByName('playlistTitles');
         for (i = 0; i < ele.length; i++) {
           if (ele[i].checked) {
             oldPlaylistName = ele[i].value; //get the name of the checked playlist
@@ -234,8 +233,7 @@
           body: JSON.stringify({
             name:
               checkedPlaylistName +
-              ' (Cleanified)' +
-              Math.floor(Math.random() * (999 - 100 + 1) + 100), //add a random 3 digit number to ensure unique playlist names
+              ' (Cleanified)' ,
             public: false
           }),
           headers: {
@@ -333,7 +331,7 @@
 
           });
           
-        }, 1000);
+        }, 3000);
     }
 
 
