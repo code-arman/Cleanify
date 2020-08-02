@@ -15,7 +15,6 @@ Cleanify converts your Explicit spotify playlists into Clean spotify playlists s
 cd Desktop
 git clone https://github.com/code-arman/Cleanify.git
 cd Cleanify
-
 ```
 
 5. Open the project in the code editor of your choice (like [VScode](https://code.visualstudio.com/download)) and run the following npm command (make sure you already have [Node](https://nodejs.org/en/download/) installed)
