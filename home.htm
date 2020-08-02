@@ -46,10 +46,18 @@
   <body>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-    <h1><a href="http://localhost:3000/">Cleanify</a></h1>
+    <div class="card text-center" style="margin-top:50px">
+                    
+        <div class="card-body">
+          <h1 class="card-title"><a href="http://localhost:3000/">Cleanify</a></h1>
+          <h5 class="card-text">Select a Playlist to Cleanify</h5>
+        </div>
+          
+        </div>
+      </div>
 
  
-    <p id="theUsersName">Signing in...</p>
+    
 
     <div class="container">
       <div class="row">
@@ -77,20 +85,18 @@
             </div>
             <div class="col-sm">
         
-                <div class="card" style="width: 20em;" >
+                <div class="card" style="width: 20em; margin-bottom:100px" >
                     <div class="card-header">
-                      <h3 style="text-align:center">Before Cleanified</h3>
+                      <h3 style="text-align:center">Before Cleanified <div id="numberOfSongsBeforeCleanified"></div> </h3>
                     </div>
                     <div id="tracksInPlaylist"></div>
-                  
-                
                   </div>
                 </div>
                   <div class="col-sm">
  
-              <div class="card" style="width: 20em;" >
+              <div class="card" style="width: 20em;margin-bottom:100px" >
                   <div class="card-header">
-                    <h3 style="text-align:center">After Cleanified</h3>
+                    <h3 style="text-align:center; " >After Cleanified <div id="numberOfSongsAfterCleanified"></div></h3>
                   </div>
                   <div id="tracksInNewPlaylist"></div>
             </div>
@@ -183,7 +189,7 @@
         )
           .then(res => res.json())
           .then(data => {});
-        alert(`Deleted playlist named: ${checkedPlaylistName}`);
+        //alert(`Deleted playlist named: ${checkedPlaylistName}`);
         location.reload();
       }
 
@@ -262,11 +268,12 @@
           .then(data => {
             let cleanTracks = [];
             let tracksInPlaylist = ``;
+            let totalTracks;
             data.items.forEach(function(names) {
+              console.log(data.total)
               if (!names.track.explicit) {
                 cleanTracks.push('spotify:track:' + names.track.id);
               }
-
               tracksInPlaylist += `
               <ul class="list-group list-group-flush">
               <li  class="list-group-item" name="trackTitles" trackId="${names.track.id}" explicit="${names.track.explicit}">${names.track.name}</li>
@@ -279,6 +286,7 @@
             document.getElementById(
               'tracksInPlaylist'
             ).innerHTML = tracksInPlaylist;
+            document.getElementById('numberOfSongsBeforeCleanified').innerHTML =`(${data.total} total)`;
 
             addTracksIntoCleanfiedPlaylist(newPlaylistID, cleanTracks);
             findCleanVersionOfSongs(checkedPlaylistID, newPlaylistID);
@@ -321,9 +329,11 @@
             document.getElementById(
               'tracksInNewPlaylist'
             ).innerHTML = tracksInNewPlaylist;
+            document.getElementById('numberOfSongsAfterCleanified').innerHTML =`(${data.total} total)`;
+
           });
           
-        }, 2000);
+        }, 1000);
     }
 
 
