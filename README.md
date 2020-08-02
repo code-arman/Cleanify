@@ -35,11 +35,12 @@ export CLIENT_SECRET=YOURCLIENTSECRET
 7. Run the following command
    `node app.js`
 8. Go to `http://localhost:3000/` in your browser (preferably Google Chrome)
-9. Login with Spotify and use the App
+9. Login with Spotify and Cleanify your Playlists
+10. Your new playlist will show up in your spotify account
 
 ### How it works:
 
-Cleanify sends a request to spotify's api for each song in the selected playlist and the word "clean." Often times, users have created a playlist with the Clean version of that song, so it shows at the top of the search results. Cleanify then compares each song in this recenetly searched for playlist to the song that the user has in their own playlist, and adds it to a new 'Cleanified' playlist if it is both non-explicit and has the same name. There is no method to ensure all songs in the playlist have a clean version, but this application gives you the best chance at finding the clean version if it is there, and removes it if there is no clean version of the song. This will make it so when you want to listen to your playlist around your parents, the songs will not have swear words.
+Cleanify sends a request to spotify's api for each song in the selected playlist with " clean" appended at the end. Often times, users have created a playlist with the Clean version of that song inside of it, so it shows at the top of the search results. Cleanify then compares each song in this recenetly searched for playlist to the song that the user has in their own playlist, and adds it to a new 'Cleanified' playlist if it is both non-explicit and has the same name. There is no method to ensure all songs in the playlist have a clean version, but using Cleanify gives you the best chance at finding the clean version if it is there, and removes it if it can't find the clean version of the song. This will make it so when you want to listen to your playlist around your parents, the songs will not have swear words :)
 
 ## How to use it
 
