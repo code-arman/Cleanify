@@ -43,7 +43,7 @@ Cleanify sends a request to spotify's api for each song in the selected playlist
 
 <h6>Login Screen</h6>
 
-![Login](/cleanify-login.png)
+![Login](/cleanify-login-page.png)
 
 <h6>Cleanify Screen</h6>
 
