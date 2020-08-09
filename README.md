@@ -54,3 +54,7 @@ Cleanify sends a request to spotify's api for each song in the selected playlist
 <h6>Cleanify Screen</h6>
 
 ![Home](imgs/cleanify-home.png)
+
+### Credit
+
+Project Idea from [here](https://github.com/Divide-By-0/app-ideas-people-would-use)
