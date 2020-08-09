@@ -25,15 +25,18 @@ npm install
 
 6. Add your Client ID and Client Secret that you got from your Spotify developer dashboard into terminal by running the following commands. Replace your information wtih YOURCLIENTID and YOURCLIENTSECRET.
 
-![Dashboard](/spotify-developer-dashboard-keys.png)
+![Dashboard](imgs/spotify-developer-dashboard-keys.png)
 
 ```
 export CLIENT_ID=YOURCLIENTID
 export CLIENT_SECRET=YOURCLIENTSECRET
 ```
 
-7. Run the following command
-   `node app.js`
+7. Run the following commands
+   ```
+   cd src
+   node server.js
+   ```
 8. Go to `http://localhost:3000/` in your browser (preferably Google Chrome)
 9. Login with Spotify and Cleanify your Playlists
 10. Your new playlist will show up in your spotify account
@@ -46,8 +49,8 @@ Cleanify sends a request to spotify's api for each song in the selected playlist
 
 <h6>Login Screen</h6>
 
-![Login](/cleanify-login-page.png)
+![Login](imgs/cleanify-login-page.png)
 
 <h6>Cleanify Screen</h6>
 
-![Home](/cleanify-home.png)
+![Home](imgs/cleanify-home.png)
