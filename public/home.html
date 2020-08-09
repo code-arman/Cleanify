@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
+    />
+  
+
+    <title>Cleanify Home</title>
+
+    <style>
+      h6 {
+        padding-top: 10px;
+      }
+      #container {
+        width: 100%;
+        height: 90%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #1db954;
+      }
+
+      h1 {
+        text-align: center;
+        padding: 0.25em;
+        font-family: 'Montserrat', sans-serif;
+      }
+      .container {
+        padding-top: 2em;
+      }
+      p {
+        font-size: 20px;
+        text-align: center;
+        font-family: 'Montserrat', sans-serif;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <div class="card text-center" style="margin-top:50px">
+                    
+        <div class="card-body">
+          <h1 class="card-title"><a href="http://localhost:3000/">Cleanify</a></h1>
+          <h5 class="card-text">Select a playlist to convert</h5>
+        </div>
+        <p id="theUsersName">Signing in...</p>
+
+      </div>
+
+ 
+
+    <div class="container">
+      <div class="row">
+        <div class="col-sm">
+          <div class="card" style="width: 20em;">
+          <div class="card-header">
+                <h3 style="text-align:center">Playlists</h3>
+              </div>
+                  <div id="playlistItems"  ></div>
+              </div>
+              <div class="p-2" ><input
+                id="submit"
+                type="submit"
+                class="btn btn-success"
+                value="Cleanify Playlist"
+              />
+            
+              <input
+              id="delete"
+              type="submit"
+
+              class="btn btn-danger"
+              value="Delete Playlist"
+            /></div>
+            </div>
+            <div class="col-sm">
+        
+                <div class="card" style="width: 20em; margin-bottom:100px" >
+                    <div class="card-header">
+                      <h3 style="text-align:center">Before Cleanified <div id="numberOfSongsBeforeCleanified"></div> </h3>
+                    </div>
+                    <div id="tracksInPlaylist"></div>
+                  </div>
+                </div>
+                  <div class="col-sm">
+ 
+              <div class="card" style="width: 20em;margin-bottom:100px" >
+                  <div class="card-header">
+                    <h3 style="text-align:center; " >After Cleanified <div id="numberOfSongsAfterCleanified"></div></h3>
+                  </div>
+                  <div id="tracksInNewPlaylist"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      </div>
+    
+           </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    
+      
+
+    </div>
+
+    <script src="app.js"></script>
+
+  </body>
+</html>

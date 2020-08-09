@@ -2,20 +2,23 @@ const express = require('express');
 const app = express();
 const request = require('request');
 const dotenv = require('dotenv');
+const path = require('path');
 
 const my_client_id = process.env.CLIENT_ID; // Your Client ID
 const client_secret = process.env.CLIENT_SECRET; // Your secret
 const redirect_uri = 'http://localhost:3000/callback'; // Your redirect uri
 
+app.use(express.static(path.join(__dirname, '../public')));
+
 app.get('/index.html', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 app.get('/home', (req, res) => {
-  res.sendFile(__dirname + '/home.htm');
+  res.sendFile(path.join(__dirname, '../public/home.html'));
 });
 
 app.listen(3000),
