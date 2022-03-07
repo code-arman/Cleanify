@@ -1,6 +1,5 @@
 import { useContext, useMemo } from "react";
 import AuthContext from "../contexts/SpotifyAuthContext";
-// import { getTracks } from "../utils/api";
 import CustomTable from "./CustomTable";
 const SongTable = ({ title }) => {
   const { tracks } = useContext(AuthContext);

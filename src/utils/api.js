@@ -26,6 +26,7 @@ instance.interceptors.response.use(
       if (token) {
         originalRequest._retry = true;
 
+        // TODO: Support refresh token
         // const newToken = await refreshUserToken(token.refresh_token);
         // authStore.setToken(newToken, token.rememberMe);
 
@@ -47,6 +48,9 @@ export const getTracks = (playlistID) =>
   handleResponse(
     instance.get(`https://api.spotify.com/v1/playlists/${playlistID}/tracks`)
   );
+
+export const getNextTracks = (next) => handleResponse(instance.get(next));
+
 export const createPlaylist = (playlistName, userId) =>
   handleResponse(
     instance.post(`https://api.spotify.com/v1/users/${userId}/playlists`, {

@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import {
   createPlaylist,
   getTracks,
+  getNextTracks,
   getUser,
   deletePlaylist,
   addTracksToPlaylist,
@@ -67,8 +68,17 @@ const Home = () => {
       isClosable: true,
     });
 
-    const tracks = await getTracks(playlists.items[checkedPlaylist].id);
+    const allTracks = [];
+    let tracks = await getTracks(playlists.items[checkedPlaylist].id);
+    allTracks.push(...tracks.items);
+    while (tracks.next) {
+      tracks = await getNextTracks(tracks.next);
+      allTracks.push(...tracks.items);
+    }
+    tracks = { items: allTracks };
+
     setTracks(tracks);
+    console.log("final", tracks);
 
     const cleanTrackIDs = [];
     const explicitTrackNames = [];
@@ -88,15 +98,17 @@ const Home = () => {
         const playlistWithCleanSong = playlistResponses.playlists;
         const firstPlaylistID = playlistWithCleanSong.items[0].id;
         const cleanTracks = await getTracks(firstPlaylistID);
-        for (let t of cleanTracks.items) {
-          if (
-            t &&
-            t.track &&
-            !t.track.explicit &&
-            t.track.name === track.slice(0, -6)
-          ) {
-            cleanVersionTrackIDs.push(`spotify:track:${t.track.id}`);
-            cleanVersionNames.push(t.track.name);
+        if (cleanTracks) {
+          for (let t of cleanTracks.items) {
+            if (
+              t &&
+              t.track &&
+              !t.track.explicit &&
+              t.track.name === track.slice(0, -6)
+            ) {
+              cleanVersionTrackIDs.push(`spotify:track:${t.track.id}`);
+              cleanVersionNames.push(t.track.name);
+            }
           }
         }
       }
@@ -106,11 +118,16 @@ const Home = () => {
       user.id
     );
     setPlaylists(await getPlaylists());
+    let allCleanSongs = [...cleanTrackIDs, ...cleanVersionTrackIDs];
+    let remainingSongs = [];
 
-    await addTracksToPlaylist(newPlaylist.id, [
-      ...cleanTrackIDs,
-      ...cleanVersionTrackIDs,
-    ]);
+    while (allCleanSongs.length > 0) {
+      remainingSongs = allCleanSongs.splice(0, 100);
+      if (remainingSongs.length > 0) {
+        await addTracksToPlaylist(newPlaylist.id, remainingSongs);
+      }
+    }
+
     setCleanifySummary({
       numOriginalClean: cleanTrackIDs.length,
       numCleanFound: cleanVersionTrackIDs.length,
