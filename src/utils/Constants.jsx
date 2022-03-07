@@ -1,4 +1,4 @@
-const CLIENT_Id = "90eb748bb57f4e21a621f6711ab46ee4";
+const CLIENT_Id = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
 const SPOTIFY_AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
 const SCOPES = [
   "user-read-private",
@@ -13,5 +13,5 @@ export const REQUEST_INFO = {
   responseType: "token",
   scope: SCOPES.join(" "),
   clientId: CLIENT_Id,
-  redirectUri: "http://localhost:3000/home",
+  redirectUri: `${window.location.href}home`,
 };
