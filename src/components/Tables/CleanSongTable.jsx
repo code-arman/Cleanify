@@ -1,14 +1,13 @@
-import { useContext, useEffect, useMemo, useState } from "react";
-import AuthContext from "../contexts/SpotifyAuthContext";
-import { getTracks } from "../utils/api";
+import { useEffect, useMemo, useState } from "react";
+import { useGlobalState } from "../../contexts/GlobalContext";
+import { getTracks } from "../../utils/api";
 import CustomTable from "./CustomTable";
 const CleanSongTable = ({ title }) => {
-  const { cleanedPlaylistID } = useContext(AuthContext);
+  const { cleanedPlaylistID } = useGlobalState();
   const [cleanedTracks, setCleanedTracks] = useState();
   useEffect(() => {
     const getCleanedTracks = async () => {
-      const p = await getTracks(cleanedPlaylistID);
-      setCleanedTracks(p);
+      setCleanedTracks(await getTracks(cleanedPlaylistID));
     };
     getCleanedTracks();
   }, [cleanedPlaylistID]);

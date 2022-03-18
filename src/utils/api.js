@@ -1,11 +1,16 @@
 import axios from "axios";
 
 const instance = axios.create();
+const wait = (next_retry_time) =>
+  new Promise((res) => setTimeout(res, next_retry_time * 1000));
 
 instance.interceptors.request.use((config) => {
   const token = localStorage.getItem("api-key");
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+    config.headers = {
+      Authorization: `Bearer ${token}`,
+      "Access-Control-Allow-Origin": "*",
+    };
   }
 
   return config;
@@ -14,27 +19,17 @@ instance.interceptors.request.use((config) => {
 instance.interceptors.response.use(
   (response) => response.data,
   async (error) => {
-    const originalRequest = error.config;
-
-    if (
-      error.response.status === 401 &&
-      error.response.data.error === "Expired access token" &&
-      !originalRequest._retry
-    ) {
-      const token = localStorage.getItem("api-key");
-
-      if (token) {
-        originalRequest._retry = true;
-
-        // TODO: Support refresh token
-        // const newToken = await refreshUserToken(token.refresh_token);
-        // authStore.setToken(newToken, token.rememberMe);
-
-        return instance(originalRequest);
+    if (error.response.status === 429) {
+      const next_retry_time = error.response.headers["retry-after"];
+      console.log("Rate limited, retry after", next_retry_time);
+      if (next_retry_time) {
+        wait(next_retry_time);
+        return instance.request(error.config);
       }
     }
 
-    throw error;
+    console.log(error);
+    Promise.reject(error);
   }
 );
 
@@ -73,12 +68,11 @@ export const addTracksToPlaylist = (playlistID, trackIDs) =>
     })
   );
 
-export const searchForTrack = (trackName) =>
-  handleResponse(
-    instance.get(
-      `https://api.spotify.com/v1/search?q=${trackName}&type=playlist`
-    )
+export const searchForTracks = (trackName) => {
+  return handleResponse(
+    instance.get(`https://api.spotify.com/v1/search?q=${trackName}&type=track`)
   );
+};
 
 class APIError extends Error {
   name = "APIError";
@@ -93,8 +87,11 @@ const handleResponse = (request) =>
       const message = error.response?.data.error;
       if (message) {
         console.error("APIError:", message, error);
-        throw new APIError({ ...error, message });
+        if (message === "Invalid access token") {
+          localStorage.removeItem("api-key");
+        }
+        return new APIError({ ...error, message });
       } else {
-        throw error;
+        return error;
       }
     });

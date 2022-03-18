@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useTable, usePagination } from "react-table";
 import {
   Table,
@@ -20,10 +20,11 @@ import {
   ChevronRightIcon,
   ChevronLeftIcon,
 } from "@chakra-ui/icons";
-import AuthContext from "../contexts/SpotifyAuthContext";
+import { useGlobalState } from "../../contexts/GlobalContext";
 
 function CustomTable({ columns, data, hasRadio }) {
-  const { checkedPlaylist, setCheckedPlaylist } = useContext(AuthContext);
+  const { checkedPlaylist, setCheckedPlaylist, setCleanedPlaylistID } =
+    useGlobalState();
 
   const {
     getTableProps,
@@ -52,39 +53,50 @@ function CustomTable({ columns, data, hasRadio }) {
     <VStack h="100%">
       <Table h="100%" {...getTableProps()}>
         <Thead>
-          {headerGroups.map((headerGroup) => (
-            <Tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, index) => (
-                <Th key={index} {...column.getHeaderProps()}>
-                  {column.render("Header")}
-                </Th>
-              ))}
-            </Tr>
-          ))}
+          {headerGroups.map((headerGroup) => {
+            return (
+              <Tr
+                key={headerGroup?.headers[0].id}
+                {...headerGroup.getHeaderGroupProps()}
+              >
+                {headerGroup.headers.map((column) => {
+                  return (
+                    <Th key={column.id} {...column.getHeaderProps()}>
+                      {column.render("Header")}
+                    </Th>
+                  );
+                })}
+              </Tr>
+            );
+          })}
         </Thead>
         <Tbody {...getTableBodyProps()}>
-          {page.map((row, i) => {
+          {page.map((row) => {
             prepareRow(row);
             return hasRadio ? (
               <RadioGroup
-                onChange={setCheckedPlaylist}
+                key={row.id}
+                onChange={(value) => {
+                  setCheckedPlaylist(value);
+                  setCleanedPlaylistID("");
+                }}
                 value={checkedPlaylist}
                 as={Tr}
                 {...row.getRowProps()}
               >
-                {row.cells.map((cell, index) => {
+                {row.cells.map((cell) => {
                   return (
-                    <Td key={index} {...cell.getCellProps()}>
+                    <Td key={cell.row.id} {...cell.getCellProps()}>
                       {cell.render("Cell")}
                     </Td>
                   );
                 })}
               </RadioGroup>
             ) : (
-              <Tr>
-                {row.cells.map((cell, index) => {
+              <Tr key={row.id}>
+                {row.cells.map((cell) => {
                   return (
-                    <Td key={index} {...cell.getCellProps()}>
+                    <Td key={cell.row.id} {...cell.getCellProps()}>
                       {cell.render("Cell")}
                     </Td>
                   );

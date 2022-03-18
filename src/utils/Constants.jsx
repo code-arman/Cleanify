@@ -1,17 +1,14 @@
-const CLIENT_Id = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
+export const CLIENT_ID = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
 const SPOTIFY_AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
 const SCOPES = [
-  // "user-read-private",
-  // "user-read-email",
-  // "playlist-read-private",
   "playlist-modify-public",
   "playlist-modify-private",
   "playlist-read-collaborative",
 ];
-export const REQUEST_INFO = {
-  authorizationUrl: SPOTIFY_AUTH_ENDPOINT,
-  responseType: "token",
-  scope: SCOPES.join(" "),
-  clientId: CLIENT_Id,
-  redirectUri: `${window.location.href}home`,
-};
+const RESPONSE_TYPE = "code";
+const REDIRECT_URI = window.location.href;
+
+export const AUTH_ENDPOINT = `${SPOTIFY_AUTH_ENDPOINT}?client_id=${CLIENT_ID}&response_type=${RESPONSE_TYPE}&redirect_uri=${REDIRECT_URI.slice(
+  0,
+  -1
+)}&scope=${SCOPES.join("%20")}`;

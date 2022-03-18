@@ -1,11 +1,11 @@
-import { Radio } from "@chakra-ui/react";
-import { useContext, useEffect, useMemo } from "react";
-import AuthContext from "../contexts/SpotifyAuthContext";
-import { getPlaylists } from "../utils/api";
+import { Center, Radio, Spinner, Text } from "@chakra-ui/react";
+import { useEffect, useMemo } from "react";
+import { useGlobalState } from "../../contexts/GlobalContext";
+import { getPlaylists } from "../../utils/api";
 import CustomTable from "./CustomTable";
 
 const PlaylistTable = () => {
-  const { playlists, setPlaylists } = useContext(AuthContext);
+  const { playlists, setPlaylists } = useGlobalState();
 
   useEffect(() => {
     const loadPlaylists = async () => {
@@ -36,6 +36,13 @@ const PlaylistTable = () => {
     []
   );
 
-  return <CustomTable columns={columns} data={data} hasRadio={true} />;
+  return data.length === 0 ? (
+    <Center h="700px" flexDir="column">
+      <Text mb={3}>Fetching playlists</Text>
+      <Spinner />
+    </Center>
+  ) : (
+    <CustomTable columns={columns} data={data} hasRadio={true} />
+  );
 };
 export default PlaylistTable;
