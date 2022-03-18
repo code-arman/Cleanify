@@ -11,7 +11,7 @@ export default function useAuth(code) {
 
   useEffect(() => {
     axios
-      .post("http://localhost:9000/api/login", {
+      .post(`${process.env.CLEANIFY_BACKEND_URL}/login`, {
         code,
       })
       .then((res) => {
@@ -33,7 +33,7 @@ export default function useAuth(code) {
     if (!refreshToken || !expiresIn) return;
     const interval = setInterval(() => {
       axios
-        .post("http://localhost:9000/api/refresh", {
+        .post(`${process.env.CLEANIFY_BACKEND_URL}/refresh`, {
           refreshToken,
         })
         .then((res) => {

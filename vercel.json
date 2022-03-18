@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "build": {
+    "env": {
+      "SPOTIFY_CLIENT_ID": "@spotify_client_id",
+      "SPOTIFY_CLIENT_SECRET": "@spotify_client_secret",
+      "CLEANIFY_BACKEND_URL": "@cleanify_backend_url",
+      "CLEANIFY_FRONTEND_URL": "@cleanify_frontend_url"
+    }
+  },
+  "builds": [{ "src": "server/app.js", "use": "@vercel/node" }],
+
+  "routes": [
+    { "src": "/api/(.*)", "dest": "server/app.js" },
+    { "src": "/(.*)", "dest": "public/index.html" }
+  ]
+}
