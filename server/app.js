@@ -57,6 +57,10 @@ app.post("/api/refresh", (req, res) => {
 });
 // TODO: Add logout
 
+app.get("/api/test", (req, res) => {
+  res.send("test");
+});
+
 app.use(express.static(path.join(__dirname, "client/build")));
 
 app.get("*", (_, res) => {
