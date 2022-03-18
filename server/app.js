@@ -12,6 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/api/login", (req, res) => {
   const code = req.body.code;
+  console.log(process.env.SPOTIFY_CLIENT_ID);
   const spotifyApi = new SpotifyWebApi({
     redirectUri: process.env.CLEANIFY_FRONTEND_URL,
     clientId: process.env.SPOTIFY_CLIENT_ID,

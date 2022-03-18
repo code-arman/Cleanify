@@ -6,6 +6,7 @@ const wait = (next_retry_time) =>
 
 instance.interceptors.request.use((config) => {
   const token = localStorage.getItem("api-key");
+  console.log("token", token);
   if (token) {
     config.headers = {
       Authorization: `Bearer ${token}`,

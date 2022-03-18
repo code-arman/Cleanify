@@ -1,3 +1,4 @@
+console.log(process.env.REACT_APP_SPOTIFY_CLIENT_ID);
 export const CLIENT_ID = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
 const SPOTIFY_AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
 const SCOPES = [

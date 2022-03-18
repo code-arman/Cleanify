@@ -205,7 +205,6 @@ const Home = ({ code }) => {
       const trackResponses = await searchForTracks(
         track.query.trim().replaceAll("#", "")
       );
-      console.log(trackResponses);
       if (!trackResponses) {
         toast({
           title: `Error searching for track. Refresh and try again`,
