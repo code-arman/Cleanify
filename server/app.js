@@ -3,6 +3,7 @@ const app = express();
 const SpotifyWebApi = require("spotify-web-api-node");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const path = require("path");
 require("dotenv").config();
 
 app.use(cors());
@@ -55,6 +56,16 @@ app.post("/api/refresh", (req, res) => {
     });
 });
 // TODO: Add logout
+
+app.use(express.static(path.join(__dirname, "./build/index.html")));
+
+app.get("*", (_, res) => {
+  res.sendFile(path.join(__dirname, "./build/index.html"), (err) => {
+    if (err) {
+      res.status(500).send(err);
+    }
+  });
+});
 
 const API_PORT = process.env.PORT ? process.env.PORT : 9000;
 
