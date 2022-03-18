@@ -17,6 +17,11 @@
   },
   "routes": [
     {
+      "src": "/api/(.*)",
+      "headers": { "cache-control": "s-maxage=0" },
+      "dest": "server/app.js"
+    },
+    {
       "src": "/static/(.*)",
       "headers": { "cache-control": "s-maxage=31536000, immutable" },
       "dest": "client/static/$1"
