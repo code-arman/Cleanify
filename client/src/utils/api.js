@@ -9,7 +9,7 @@ instance.interceptors.request.use((config) => {
   if (token) {
     config.headers = {
       Authorization: `Bearer ${token}`,
-      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/x-www-form-urlencoded",
     };
   }
 
@@ -28,7 +28,7 @@ instance.interceptors.response.use(
       }
     }
 
-    console.log(error);
+    console.log("API ERROR", error);
     Promise.reject(error);
   }
 );

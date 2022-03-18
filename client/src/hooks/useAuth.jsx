@@ -24,7 +24,10 @@ export default function useAuth(code) {
         window.history.pushState({}, null, "/");
       })
       .catch((err) => {
-        console.log("error in auth", err);
+        console.log(
+          `Error posting to ${process.env.REACT_APP_CLEANIFY_BACKEND_URL}/login`,
+          err
+        );
         window.location = "/";
       });
   }, [code, setToken]);

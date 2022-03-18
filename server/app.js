@@ -28,7 +28,7 @@ app.post("/api/login", (req, res) => {
       });
     })
     .catch((err) => {
-      console.log(err);
+      console.log("Error setting access tokens", err);
       res.sendStatus(400);
     });
 });
@@ -65,17 +65,13 @@ app.use(express.static(path.join(__dirname, "client/build")));
 
 app.get("*", (_, res) => {
   res.sendFile(path.join(__dirname, "client/build", "index.html"), (err) => {
-    console.log(
-      "Tried to send file",
-      path.join(__dirname, "client/build", "index.html")
-    );
     if (err) {
       res.status(500).send(err);
     }
   });
 });
 
-const API_PORT = process.env.PORT ? process.env.PORT : 9000;
+const API_PORT = process.env.PORT || 9000;
 
 app.listen(API_PORT, (err) => {
   if (err) {
