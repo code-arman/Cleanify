@@ -9,6 +9,9 @@ export default function useAuth(code) {
   const [expiresIn, setExpiresIn] = useState();
   const { setToken } = useGlobalState();
 
+  console.log(
+    `backend url: [${process.env.REACT_APP_CLEANIFY_BACKEND_URL}/login]`
+  );
   useEffect(() => {
     axios
       .post(`${process.env.REACT_APP_CLEANIFY_BACKEND_URL}/login`, {
