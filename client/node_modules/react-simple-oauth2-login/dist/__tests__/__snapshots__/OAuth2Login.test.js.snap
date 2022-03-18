@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Renders defaults 1`] = `
+<button
+  onClick={[Function]}
+  type="button"
+>
+  Login
+</button>
+`;
+
+exports[`Renders with \`buttonText\` 1`] = `
+<button
+  onClick={[Function]}
+  type="button"
+>
+  Foo
+</button>
+`;
+
+exports[`Renders with \`className\` 1`] = `
+<button
+  className="foobar"
+  onClick={[Function]}
+  type="button"
+>
+  Login
+</button>
+`;
+
+exports[`Renders with custom render function 1`] = `
+<div
+  className=""
+>
+  <a
+    href={true}
+    onClick={[Function]}
+  >
+    Login
+  </a>
+</div>
+`;

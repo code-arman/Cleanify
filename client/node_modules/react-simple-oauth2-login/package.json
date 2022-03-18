@@ -1,0 +1,82 @@
+{
+  "name": "react-simple-oauth2-login",
+  "version": "0.5.3",
+  "description": "A React Component for OAuth2 Login - adapted from react-github-login",
+  "main": "dist/index.js",
+  "files": [
+    "README.md",
+    "dist/**/*"
+  ],
+  "author": "Benoît Hubert <benoithubert@gmail.com> (https://developpeur-web-toulouse.fr/)",
+  "contributors": [
+    {
+      "name": "Raoul Snyman",
+      "url": "https://github.com/rsnyman"
+    }
+  ],
+  "scripts": {
+    "build": "NODE_ENV=production webpack -p",
+    "lint": "npx eslint --ext .js,.jsx --fix src",
+    "transpile": "babel src -d dist --ignore src/__tests__/**/*.js",
+    "prepublishOnly": "npm run transpile",
+    "test:unit": "jest",
+    "test:e2e": "wdio run ./wdio.conf.js",
+    "test": "npm run test:unit && npm run test:e2e",
+    "start-oauth2-server": "cd test-oauth2-server && node src/index",
+    "start-example-client": "cd example/client && npm start",
+    "start-example-server": "cd example/server && npm start",
+    "start-example": "concurrently \"npm:start-example-client\" \"npm:start-example-server\"",
+    "ci": "start-server-and-test start-oauth2-server :4000 start-example :1234 test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bhubr/react-simple-oauth2-login.git"
+  },
+  "keywords": [
+    "react",
+    "reactjs",
+    "react-component",
+    "oauth2-login",
+    "react-oauth2-login"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "prop-types": "^15.7.2",
+    "react": "16.0 - 17"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.6",
+    "@babel/plugin-transform-react-jsx": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "@wdio/cli": "^6.12.1",
+    "@wdio/local-runner": "^6.12.1",
+    "@wdio/mocha-framework": "^6.11.0",
+    "@wdio/spec-reporter": "^6.11.0",
+    "@wdio/sync": "^6.11.0",
+    "autoprefixer": "^7.1.2",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.0.6",
+    "chromedriver": "^91.0.1",
+    "concurrently": "^6.2.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.6",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^2.5.1",
+    "fbjs": "^3.0.0",
+    "jest": "^25.1.0",
+    "object-assign": "^4.1.0",
+    "react": "^16.0.0",
+    "react-css-modules": "^4.5.2",
+    "react-dom": "^16.0.0",
+    "react-test-renderer": "^16.14.0",
+    "start-server-and-test": "^1.12.5",
+    "wdio-chromedriver-service": "^6.0.4",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
+  }
+}

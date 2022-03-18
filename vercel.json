@@ -8,7 +8,13 @@
       "CLEANIFY_FRONTEND_URL": "@cleanify_frontend_url"
     }
   },
-  "builds": [{ "src": "server/app.js", "use": "@vercel/node" }],
+  "builds": [
+    { "src": "server/app.js", "use": "@vercel/node" },
+    {
+      "src": "./client/build",
+      "use": "@vercel/static"
+    }
+  ],
 
   "routes": [
     { "src": "/api/(.*)", "dest": "server/app.js" },
