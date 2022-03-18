@@ -12,9 +12,10 @@ export default function useAuth(code) {
   useEffect(() => {
     axios
       .post(`${process.env.REACT_APP_CLEANIFY_BACKEND_URL}/login`, {
-        code,
+        code: code,
       })
       .then((res) => {
+        console.log("Response", res);
         setAccessToken(res.data.accessToken);
         setToken(res.data.accessToken);
         localStorage.setItem("api-key", res.data.accessToken);
@@ -26,6 +27,9 @@ export default function useAuth(code) {
       .catch((err) => {
         console.log(
           `Error posting to ${process.env.REACT_APP_CLEANIFY_BACKEND_URL}/login`,
+          "code is",
+          code,
+          "error is",
           err
         );
         window.location = "/";
