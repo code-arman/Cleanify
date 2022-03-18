@@ -63,6 +63,10 @@ app.get("*", (_, res) => {
   res.sendFile(
     path.join(__dirname, "..client", "./build", "index.html"),
     (err) => {
+      console.log(
+        "Tried to send file",
+        path.join(__dirname, "..client", "./build", "index.html")
+      );
       if (err) {
         res.status(500).send(err);
       }

@@ -18,6 +18,6 @@
 
   "routes": [
     { "src": "/api/(.*)", "dest": "server/app.js" },
-    { "src": "/(.*)", "dest": "/" }
+    { "src": "/(.*)", "dest": "client/build/index.html" }
   ]
 }
