@@ -11,7 +11,7 @@ export default function useAuth(code) {
 
   useEffect(() => {
     axios
-      .post(`${process.env.CLEANIFY_BACKEND_URL}/login`, {
+      .post(`${process.env.REACT_APP_CLEANIFY_BACKEND_URL}/login`, {
         code,
       })
       .then((res) => {
