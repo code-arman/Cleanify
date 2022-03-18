@@ -1,6 +1,7 @@
 {
   "regions": ["iad1"],
   "builds": [
+    { "src": "server/app.js", "use": "@now/node" },
     {
       "src": "client/package.json",
       "use": "@now/static-build",
