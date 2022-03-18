@@ -57,21 +57,18 @@ app.post("/api/refresh", (req, res) => {
 });
 // TODO: Add logout
 
-app.use(express.static(path.join(__dirname, "..client", "./build")));
+app.use(express.static(path.join(__dirname, "client/build")));
 
 app.get("*", (_, res) => {
-  res.sendFile(
-    path.join(__dirname, "..client", "./build", "index.html"),
-    (err) => {
-      console.log(
-        "Tried to send file",
-        path.join(__dirname, "..client", "./build", "index.html")
-      );
-      if (err) {
-        res.status(500).send(err);
-      }
+  res.sendFile(path.join(__dirname, "client/build", "index.html"), (err) => {
+    console.log(
+      "Tried to send file",
+      path.join(__dirname, "client/build", "index.html")
+    );
+    if (err) {
+      res.status(500).send(err);
     }
-  );
+  });
 });
 
 const API_PORT = process.env.PORT ? process.env.PORT : 9000;
