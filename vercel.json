@@ -1,5 +1,12 @@
 {
-  "version": 2,
+  "regions": ["iad1"],
+  "builds": [
+    {
+      "src": "client/package.json",
+      "use": "@now/static-build",
+      "config": { "distDir": "build" }
+    }
+  ],
   "build": {
     "env": {
       "SPOTIFY_CLIENT_ID": "@spotify_client_id",
@@ -8,16 +15,27 @@
       "CLEANIFY_FRONTEND_URL": "@cleanify_frontend_url"
     }
   },
-  "builds": [
-    { "src": "server/app.js", "use": "@vercel/node" },
-    {
-      "src": "./client/build",
-      "use": "@vercel/static"
-    }
-  ],
-
   "routes": [
-    { "src": "/api/(.*)", "dest": "server/app.js" },
-    { "src": "/(.*)", "dest": "client/build/index.html" }
+    {
+      "src": "/static/(.*)",
+      "headers": { "cache-control": "s-maxage=31536000, immutable" },
+      "dest": "client/static/$1"
+    },
+    { "src": "/favicon.ico", "dest": "client/favicon.ico" },
+    {
+      "src": "/asset-manifest.json",
+      "dest": "client/asset-manifest.json"
+    },
+    {
+      "src": "/precache-manifest.(.*)",
+      "dest": "client/precache-manifest.$1"
+    },
+    { "src": "/manifest.json", "dest": "client/manifest.json" },
+    {
+      "src": "/service-worker.js",
+      "headers": { "cache-control": "s-maxage=0" },
+      "dest": "client/service-worker.js"
+    },
+    { "src": "/(.*)", "dest": "client/index.html" }
   ]
 }
