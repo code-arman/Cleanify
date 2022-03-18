@@ -35,6 +35,7 @@ export const spotifyApi = new SpotifyWebApi({
 });
 
 const Home = ({ code }) => {
+  console.log("code from url", code);
   const accessToken = useAuth(code);
   const [user, setUser] = useState();
   const { setToken, setCheckedPlaylist, songsToResolve, setSongsToResolve } =
