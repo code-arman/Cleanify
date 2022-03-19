@@ -17,6 +17,7 @@ import {
   useToast,
   useDisclosure,
   Box,
+  Heading,
 } from "@chakra-ui/react";
 import PlaylistTable from "../components/Tables/PlaylistTable.jsx";
 import SongTable from "../components/Tables/SongTable.jsx";
@@ -100,7 +101,7 @@ const Home = ({ code }) => {
     if (refreshedPlaylists instanceof Error) {
       toast({
         title: `Unable to perform action. Please try refreshing the page and log in again`,
-        position: "top-right",
+        position: "top",
         status: "error",
         duration: 7000,
         isClosable: true,
@@ -131,7 +132,7 @@ const Home = ({ code }) => {
     if (tracks instanceof Error) {
       toast({
         title: `Unable to perform action. Please try refreshing the page and log in again`,
-        position: "top-right",
+        position: "top",
         status: "error",
         duration: 7000,
         isClosable: true,
@@ -141,7 +142,7 @@ const Home = ({ code }) => {
     if (!tracks) {
       toast({
         title: `Error fetching all tracks. Refresh and try again`,
-        position: "top-right",
+        position: "top",
         status: "error",
         duration: 7000,
         isClosable: true,
@@ -153,7 +154,7 @@ const Home = ({ code }) => {
       if (!tracks) {
         toast({
           title: `Error fetching all tracks. Refresh and try again`,
-          position: "top-right",
+          position: "top",
           status: "error",
           duration: 7000,
           isClosable: true,
@@ -178,8 +179,6 @@ const Home = ({ code }) => {
 
   const handleCleanify = async () => {
     setCleanifyStatus(true);
-
-    await getAllTracks();
 
     const cleanTrackIDs = [];
     const explicitTracks = [];
@@ -212,7 +211,7 @@ const Home = ({ code }) => {
       if (!trackResponses) {
         toast({
           title: `Error searching for track. Refresh and try again`,
-          position: "top-right",
+          position: "top",
           status: "error",
           duration: 7000,
           isClosable: true,
@@ -221,7 +220,7 @@ const Home = ({ code }) => {
       if (trackResponses instanceof Error) {
         toast({
           title: `Unable to perform action. Please try refreshing the page and log in again`,
-          position: "top-right",
+          position: "top",
           status: "error",
           duration: 7000,
           isClosable: true,
@@ -299,7 +298,7 @@ const Home = ({ code }) => {
     setCleanifyStatus(false);
     toast({
       title: `Cleanified Playlist`,
-      position: "top-right",
+      position: "top",
       status: "success",
       duration: 4000,
       isClosable: true,
@@ -313,6 +312,7 @@ const Home = ({ code }) => {
       <Header username={user && user.display_name} />
       <Flex align="center" justify="center" p={[0, 1, 15, 15]}>
         <VStack mb={5}>
+          {user && <Heading size={"sm"}>Select a Playlist to Clean</Heading>}
           {user && (
             <SimpleGrid spacing={[1, 3, 5, 5]} columns={[1, 1, 2, 2]}>
               <Button
@@ -322,7 +322,7 @@ const Home = ({ code }) => {
                 color="white"
                 onClick={handleCleanify}
                 loadingText="Cleanifying"
-                isDisabled={!checkedPlaylist}
+                isDisabled={!checkedPlaylist || !tracks}
               >
                 Cleanify Playlist
               </Button>
