@@ -297,6 +297,13 @@ const Home = ({ code }) => {
 
     setCleanedPlaylistID(newPlaylist.id);
     setCleanifyStatus(false);
+    toast({
+      title: `Cleanified Playlist`,
+      position: "top-right",
+      status: "success",
+      duration: 4000,
+      isClosable: true,
+    });
   };
 
   return isLoading ? (
@@ -368,46 +375,51 @@ const Home = ({ code }) => {
               mt={[1, 1, 1, 1]}
               mb={[20, 1, 1, 1]}
               h="700px"
-              width={["250px", "250px", "350px"]}
+              width={["300px", "300px", "350px"]}
             >
               {user && <PlaylistTable />}
             </Container>
-            <Container
-              mt={["74px", 1, 1, 1]}
-              mb={[20, 1, 1, 1]}
-              h="700px"
-              width={["250px", "250px", "350px"]}
-            >
-              {checkedPlaylist && (
-                <SongTable
-                  title={`Before Cleanified ${
-                    tracks ? `(${tracks.items.length} songs)` : ""
-                  }`}
-                />
-              )}
-            </Container>
-            <Container
-              mt={["50px", 1, 1, 1]}
-              mb={[20, 1, 1, 1]}
-              h="700px"
-              width={["250px", "250px", "350px"]}
-            >
-              {checkedPlaylist && cleanedPlaylistID ? (
-                <CleanSongTable
-                  title={`After Cleanified (${
-                    isCleanifyLoading.numCleanFound +
-                    isCleanifyLoading.numOriginalClean
-                  } songs)`}
-                />
-              ) : (
-                cleanifyProgress &&
-                cleanifyProgress !== 100 && (
-                  <Center h="700px" flexDir="column">
-                    <ProgressBar value={cleanifyProgress} />
-                  </Center>
-                )
-              )}
-            </Container>
+            {checkedPlaylist && (
+              <Container
+                mt={[1, 1, 1, 1]}
+                mb={[20, 1, 1, 1]}
+                h="700px"
+                width={["300px", "300px", "350px"]}
+              >
+                {checkedPlaylist && (
+                  <SongTable
+                    title={`Before Cleanified ${
+                      tracks ? `(${tracks.items.length} songs)` : ""
+                    }`}
+                  />
+                )}
+              </Container>
+            )}
+            {((checkedPlaylist && cleanifyProgress) ||
+              (checkedPlaylist && cleanedPlaylistID)) && (
+              <Container
+                mt={[1, 1, 1, 1]}
+                mb={[20, 1, 1, 1]}
+                h="700px"
+                width={["300px", "300px", "350px"]}
+              >
+                {checkedPlaylist && cleanedPlaylistID ? (
+                  <CleanSongTable
+                    title={`After Cleanified (${
+                      isCleanifyLoading.numCleanFound +
+                      isCleanifyLoading.numOriginalClean
+                    } songs)`}
+                  />
+                ) : (
+                  cleanifyProgress &&
+                  cleanifyProgress !== 100 && (
+                    <Center h="700px" flexDir="column">
+                      <ProgressBar value={cleanifyProgress} />
+                    </Center>
+                  )
+                )}
+              </Container>
+            )}
           </SimpleGrid>
         </VStack>
       </Flex>

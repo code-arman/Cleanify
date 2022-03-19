@@ -127,7 +127,7 @@ function CustomTable({ columns, data, hasRadio }) {
 
         <Flex alignItems="center">
           <Text flexShrink="0" mr={8}>
-            Page{" "}
+            {" "}
             <Text fontWeight="bold" as="span">
               {pageIndex + 1}
             </Text>{" "}
