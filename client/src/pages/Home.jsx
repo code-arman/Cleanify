@@ -367,7 +367,7 @@ const Home = ({ code }) => {
             spacing={5}
           >
             <Container
-              mt={["150px", 1, 1, 1]}
+              mt={[1, 1, 1, 1]}
               mb={[20, 1, 1, 1]}
               h="700px"
               width={["250px", "250px", "350px"]}
@@ -375,7 +375,7 @@ const Home = ({ code }) => {
               {user && <PlaylistTable />}
             </Container>
             <Container
-              mt={["150px", 1, 1, 1]}
+              mt={["74px", 1, 1, 1]}
               mb={[20, 1, 1, 1]}
               h="700px"
               width={["250px", "250px", "350px"]}
@@ -389,7 +389,7 @@ const Home = ({ code }) => {
               )}
             </Container>
             <Container
-              mt={["150px", 1, 1, 1]}
+              mt={["50px", 1, 1, 1]}
               mb={[20, 1, 1, 1]}
               h="700px"
               width={["250px", "250px", "350px"]}

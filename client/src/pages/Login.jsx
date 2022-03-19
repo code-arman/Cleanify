@@ -9,7 +9,7 @@ import {
   useColorModeValue,
   chakra,
 } from "@chakra-ui/react";
-import CleanifyHomePage from "../assets/CleanifyHomePage.png";
+import CleanifyHomePage from "../assets/CleanifyHomePageV2.png";
 import Header from "../components/Header";
 
 function Login() {
