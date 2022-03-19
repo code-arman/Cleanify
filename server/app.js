@@ -11,9 +11,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/api/login", (req, res) => {
-  console.log("Request recieved from post", req);
   const code = req.body.code;
-  console.log(process.env.SPOTIFY_CLIENT_ID);
   const spotifyApi = new SpotifyWebApi({
     redirectUri: process.env.CLEANIFY_FRONTEND_URL,
     clientId: process.env.SPOTIFY_CLIENT_ID,
@@ -30,7 +28,6 @@ app.post("/api/login", (req, res) => {
       });
     })
     .catch((err) => {
-      console.log("Error setting access tokens", err);
       res.sendStatus(400);
     });
 });
@@ -65,9 +62,7 @@ app.get("/api/test", (req, res) => {
 });
 
 app.post("/api/test", (req, res) => {
-  console.log("Request recieved from post", req);
   const code = req.body.code;
-  console.log("Code recieved from test", code);
   res.send("Post worked");
 });
 
