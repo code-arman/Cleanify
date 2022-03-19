@@ -3,6 +3,7 @@ const SPOTIFY_AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
 const SCOPES = [
   "playlist-modify-public",
   "playlist-modify-private",
+  "playlist-read-private",
   "playlist-read-collaborative",
 ];
 const RESPONSE_TYPE = "code";
