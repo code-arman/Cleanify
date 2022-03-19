@@ -12,10 +12,13 @@ import {
   HStack,
   Heading,
   Text,
+  Button,
 } from "@chakra-ui/react";
 import { FaGithub, FaGripLines } from "react-icons/fa";
 import { useViewportScroll } from "framer-motion";
 import React from "react";
+import axios from "axios";
+import { useGlobalState } from "../contexts/GlobalContext";
 const Header = ({ username }) => {
   const mobileNav = useDisclosure();
 
@@ -23,11 +26,28 @@ const Header = ({ username }) => {
   const ref = React.useRef();
   const [y, setY] = React.useState(0);
   const { height = 0 } = ref.current ? ref.current.getBoundingClientRect() : {};
+  const { setShouldLogout } = useGlobalState();
 
   const { scrollY } = useViewportScroll();
   React.useEffect(() => {
     return scrollY.onChange(() => setY(scrollY.get()));
   }, [scrollY]);
+
+  const handleLogout = () => {
+    axios
+      .post(`${process.env.REACT_APP_CLEANIFY_BACKEND_URL}/logout`)
+      .then(() => {
+        console.log("logging out");
+        localStorage.removeItem("api-key");
+        localStorage.setItem("logout", true);
+        window.location = "/";
+
+        setShouldLogout(true);
+      })
+      .catch((err) => {
+        window.location = "/";
+      });
+  };
 
   const ViewGithubButton = (
     <Box
@@ -87,6 +107,7 @@ const Header = ({ username }) => {
       spacing={1}
       rounded="sm"
       shadow="sm"
+      zIndex="dropdown"
     >
       <CloseButton
         aria-label="Close menu"
@@ -102,6 +123,16 @@ const Header = ({ username }) => {
       >
         View on Github
       </Link>
+      <Button
+        as={Link}
+        onClick={handleLogout}
+        variant="ghost"
+        lineHeight="inherit"
+        fontWeight="semibold"
+        isExternal
+      >
+        Logout
+      </Button>
     </VStack>
   );
   return (
@@ -119,13 +150,10 @@ const Header = ({ username }) => {
         <chakra.div h="4.5rem" mx="auto" maxW="1200px">
           <Flex w="full" h="full" px="6" align="center" justify="space-between">
             <Flex align="center">
-              <Link href="/">
-                <HStack>
-                  <Heading size="lg">Cleanify</Heading>
-                </HStack>
-              </Link>
+              <HStack>
+                <Heading size="lg">Cleanify</Heading>
+              </HStack>
             </Flex>
-
             <Flex
               justify="flex-end"
               w="full"
@@ -135,8 +163,19 @@ const Header = ({ username }) => {
             >
               <HStack spacing="5" display={{ base: "none", md: "flex" }}>
                 {username && <Text color="gray.900">{username}</Text>}
+                {ViewGithubButton}
+
+                {username && (
+                  <Link
+                    onClick={handleLogout}
+                    color="black"
+                    as={Button}
+                    bg="white"
+                  >
+                    Logout
+                  </Link>
+                )}
               </HStack>
-              {ViewGithubButton}
               <IconButton
                 display={{ base: "flex", md: "none" }}
                 aria-label="Open menu"

@@ -9,6 +9,7 @@ const GlobalContextProvider = ({ children }) => {
   const [tracks, setTracks] = useState();
   const [cleanedPlaylistID, setCleanedPlaylistID] = useState();
   const [songsToResolve, setSongsToResolve] = useState([]);
+  const [shouldLogout, setShouldLogout] = useState(false);
 
   return (
     <GlobalContext.Provider
@@ -25,6 +26,8 @@ const GlobalContextProvider = ({ children }) => {
         setCleanedPlaylistID,
         songsToResolve,
         setSongsToResolve,
+        shouldLogout,
+        setShouldLogout,
       }}
     >
       {children}

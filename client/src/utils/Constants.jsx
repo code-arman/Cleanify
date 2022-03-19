@@ -7,7 +7,7 @@ const SCOPES = [
   "playlist-read-collaborative",
 ];
 const RESPONSE_TYPE = "code";
-const REDIRECT_URI = window.location.href;
+const REDIRECT_URI = process.env.REACT_APP_SPOTIFY_REDIRECT_URI;
 
 export const AUTH_ENDPOINT = `${SPOTIFY_AUTH_ENDPOINT}?client_id=${CLIENT_ID}&response_type=${RESPONSE_TYPE}&redirect_uri=${REDIRECT_URI.slice(
   0,

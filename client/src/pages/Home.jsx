@@ -23,7 +23,6 @@ import SongTable from "../components/Tables/SongTable.jsx";
 import { useGlobalState } from "../contexts/GlobalContext.jsx";
 import CleanSongTable from "../components/Tables/CleanSongTable.jsx";
 import { SummaryModal } from "../components/Modals/SummaryModal.jsx";
-import Failed from "./Failed.jsx";
 import useAuth from "../hooks/useAuth.jsx";
 import SpotifyWebApi from "spotify-web-api-node";
 import { ConflictModal } from "../components/Modals/Conflict/ConflictModal.jsx";
@@ -37,6 +36,7 @@ export const spotifyApi = new SpotifyWebApi({
 });
 
 const Home = ({ code }) => {
+  const [isLoading, setIsLoading] = useState(true);
   const accessToken = useAuth(code);
   const [user, setUser] = useState();
   const { setToken, setCheckedPlaylist, songsToResolve, setSongsToResolve } =
@@ -49,8 +49,8 @@ const Home = ({ code }) => {
     if (!accessToken) return;
     spotifyApi.setAccessToken(accessToken);
     setToken(accessToken);
-    spotifyApi.setAccessToken(accessToken);
     localStorage.setItem("api-key", accessToken);
+    setIsLoading(false);
   }, [accessToken, setToken]);
 
   const {
@@ -82,8 +82,10 @@ const Home = ({ code }) => {
     const loadUser = async () => {
       setUser(await getUser());
     };
-    loadUser();
-  }, []);
+    if (accessToken) {
+      loadUser();
+    }
+  }, [accessToken]);
 
   const handleDelete = async () => {
     setDeleteStatus(true);
@@ -297,17 +299,13 @@ const Home = ({ code }) => {
     setCleanifyStatus(false);
   };
 
-  return (
+  return isLoading ? (
+    <></>
+  ) : (
     <Box>
       <Header username={user && user.display_name} />
       <Flex align="center" justify="center" p={[0, 1, 15, 15]}>
         <VStack mb={5}>
-          {!user && (
-            <>
-              <Failed />
-            </>
-          )}
-
           {user && (
             <SimpleGrid spacing={[1, 3, 5, 5]} columns={[1, 1, 2, 2]}>
               <Button

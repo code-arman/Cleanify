@@ -33,7 +33,7 @@ app.post("/api/login", (req, res) => {
 });
 
 app.post("/api/refresh", (req, res) => {
-  console.log("Refresh token api called");
+  console.log("Refresh token endpoint called");
   const refreshToken = req.body.refreshToken;
   const spotifyApi = new SpotifyWebApi({
     redirectUri: process.env.CLEANIFY_FRONTEND_URL,
@@ -55,15 +55,15 @@ app.post("/api/refresh", (req, res) => {
       res.sendStatus(400);
     });
 });
-// TODO: Add logout
 
-app.get("/api/test", (req, res) => {
-  res.send("test");
-});
-
-app.post("/api/test", (req, res) => {
-  const code = req.body.code;
-  res.send("Post worked");
+app.post("/api/logout", (req, res) => {
+  const spotifyApi = new SpotifyWebApi({
+    redirectUri: process.env.CLEANIFY_FRONTEND_URL,
+    clientId: process.env.SPOTIFY_CLIENT_ID,
+    clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
+  });
+  spotifyApi.resetCredentials();
+  res.sendStatus(200);
 });
 
 app.use(express.static(path.join(__dirname, "client/build")));

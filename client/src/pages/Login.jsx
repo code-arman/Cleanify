@@ -13,6 +13,13 @@ import CleanifyHomePage from "../assets/CleanifyHomePageV2.png";
 import Header from "../components/Header";
 
 function Login() {
+  const handleLogin = () => {
+    const logout = localStorage.getItem("logout");
+    JSON.parse(logout) === true
+      ? (window.location.href = `${AUTH_ENDPOINT}&show_dialog=true`)
+      : (window.location.href = AUTH_ENDPOINT);
+    localStorage.setItem("logout", false);
+  };
   return (
     <Box>
       <Header />
@@ -71,7 +78,7 @@ function Login() {
               cursor="pointer"
               textColor={"white"}
               _hover={{ bgImg: "linear-gradient(rgba(0, 0, 0, 0.4) 0 0)" }}
-              href={AUTH_ENDPOINT}
+              onClick={handleLogin}
             >
               Login with Spotify
               <Icon boxSize={4} ml={1} viewBox="0 0 20 20" fill="currentColor">
