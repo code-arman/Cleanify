@@ -9,8 +9,13 @@ instance.interceptors.request.use((config) => {
   if (token) {
     config.headers = {
       Authorization: `Bearer ${token}`,
+      "Access-Control-Allow-Origin": "http://localhost:3000/",
+      "Access-Control-Allow-Headers": "Origin",
+      "Access-Control-Max-Age": 60,
       "Content-Type": "application/x-www-form-urlencoded",
     };
+    config.maxBodyLength = Infinity;
+    config.maxContentLength = Infinity;
   }
 
   return config;
@@ -19,6 +24,8 @@ instance.interceptors.request.use((config) => {
 instance.interceptors.response.use(
   (response) => response.data,
   async (error) => {
+    const originalRequest = error.config;
+
     if (error.response.status === 429) {
       const next_retry_time = error.response.headers["retry-after"];
       console.log("Rate limited, retry after", next_retry_time);
@@ -26,12 +33,16 @@ instance.interceptors.response.use(
         wait(next_retry_time);
         return instance.request(error.config);
       }
+    } else if (error.response.status === 404) {
+      originalRequest._retry = true;
+      return instance(originalRequest);
     }
 
     console.log("API ERROR", error);
-    Promise.reject(error);
   }
 );
+
+export default instance;
 
 export const getUser = () =>
   handleResponse(instance.get("https://api.spotify.com/v1/me"));
@@ -68,12 +79,12 @@ export const addTracksToPlaylist = (playlistID, trackIDs) =>
     })
   );
 
-export const searchForTracks = (trackName) => {
-  return handleResponse(
-    instance.get(`https://api.spotify.com/v1/search?q=${trackName}&type=track`)
+export const searchForTracks = (trackName) =>
+  handleResponse(
+    instance.get(
+      `https://api.spotify.com/v1/search?q=${encodeURI(trackName)}&type=track`
+    )
   );
-};
-
 class APIError extends Error {
   name = "APIError";
 }

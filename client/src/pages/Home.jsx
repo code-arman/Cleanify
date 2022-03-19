@@ -45,6 +45,7 @@ const Home = ({ code }) => {
   const [cleanifyStatus, setCleanifyStatus] = useState(false);
   const [deleteStatus, setDeleteStatus] = useState(false);
   const [cleanifyProgress, setCleanifyProgress] = useState(false);
+  const [gettingTracks, setGettingTracks] = useState(false);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -81,12 +82,22 @@ const Home = ({ code }) => {
 
   useEffect(() => {
     const loadUser = async () => {
-      setUser(await getUser());
+      try {
+        setUser(await getUser());
+      } catch (e) {
+        toast({
+          title: `Unable to perform action. Please try refreshing the page and log in again`,
+          position: "top",
+          status: "error",
+          duration: 7000,
+          isClosable: true,
+        });
+      }
     };
     if (accessToken) {
       loadUser();
     }
-  }, [accessToken]);
+  }, [accessToken, toast]);
 
   const handleDelete = async () => {
     setDeleteStatus(true);
@@ -125,6 +136,7 @@ const Home = ({ code }) => {
   };
 
   const getAllTracks = useCallback(async () => {
+    setGettingTracks(true);
     setTracks({ items: [] });
 
     const allTracks = [];
@@ -167,6 +179,7 @@ const Home = ({ code }) => {
     tracks = { items: allTracks };
 
     setTracks(tracks);
+    setGettingTracks(false);
     return allTracks;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkedPlaylist, setTracks, toast]);
@@ -178,131 +191,143 @@ const Home = ({ code }) => {
   }, [checkedPlaylist, getAllTracks]);
 
   const handleCleanify = async () => {
-    setCleanifyStatus(true);
+    try {
+      setCleanifyStatus(true);
 
-    const cleanTrackIDs = [];
-    const explicitTracks = [];
+      const cleanTrackIDs = [];
+      const explicitTracks = [];
 
-    for (let t of tracks.items) {
-      if (!t.track) continue;
-      t && t.track && t.track.explicit
-        ? explicitTracks.push({
-            query: `${t.track.name} ${t.track.artists[0].name}`,
-            name: t.track.name,
-            artists: t.track.artists,
-            uri: t.track.uri,
-            link: t.track.external_urls.spotify,
-          })
-        : cleanTrackIDs.push(t.track.uri);
-    }
-
-    const cleanVersionTrackIDs = [];
-    const remainingExplicitSongs = [];
-    const potentiallyCleanSongs = new Map();
-
-    const total = explicitTracks.length;
-    let index = 0;
-    for (let track of explicitTracks) {
-      index++;
-      if (track.query.length === 0) continue;
-      const trackResponses = await searchForTracks(
-        track.query.trim().replaceAll("#", "")
-      );
-      if (!trackResponses) {
-        toast({
-          title: `Error searching for track. Refresh and try again`,
-          position: "top",
-          status: "error",
-          duration: 7000,
-          isClosable: true,
-        });
+      for (let t of tracks.items) {
+        if (!t.track) continue;
+        t && t.track && t.track.explicit
+          ? explicitTracks.push({
+              query: `${t.track.name} ${t.track.artists[0].name}`,
+              name: t.track.name,
+              artists: t.track.artists,
+              uri: t.track.uri,
+              link: t.track.external_urls.spotify,
+            })
+          : cleanTrackIDs.push(t.track.uri);
       }
-      if (trackResponses instanceof Error) {
-        toast({
-          title: `Unable to perform action. Please try refreshing the page and log in again`,
-          position: "top",
-          status: "error",
-          duration: 7000,
-          isClosable: true,
-        });
-        return;
-      }
-      let isClean = false;
-      if (trackResponses && trackResponses.tracks.items.length > 0) {
-        for (let t of trackResponses.tracks.items) {
-          if (t && t.name && !t.explicit && containSameArtists(t, track)) {
-            if (fuzzball.distance(t.name, track.name) === 0) {
-              cleanVersionTrackIDs.push(t.uri);
-              isClean = true;
-              break;
-            } else if (fuzzball.ratio(t.name, track.name) > 1) {
-              if (potentiallyCleanSongs.has(track.name)) {
-                potentiallyCleanSongs.get(track.name).push({
-                  name: t.name,
-                  link: t.external_urls.spotify,
-                  uri: t.uri,
-                  original_track_uri: track.uri,
-                  original_track_link: track.link,
-                });
-              } else {
-                potentiallyCleanSongs.set(track.name, [
-                  {
+
+      const cleanVersionTrackIDs = [];
+      const remainingExplicitSongs = [];
+      const potentiallyCleanSongs = new Map();
+
+      const total = explicitTracks.length;
+      let index = 0;
+      for (let track of explicitTracks) {
+        index++;
+        if (track.query.length === 0) continue;
+        const trackResponses = await searchForTracks(
+          track.query.trim().replaceAll("#", "")
+        );
+        if (!trackResponses) {
+          toast({
+            title: `Error searching for track. Refresh and try again`,
+            position: "top",
+            status: "error",
+            duration: 7000,
+            isClosable: true,
+          });
+        }
+        if (trackResponses instanceof Error) {
+          toast({
+            title: `Error while Cleanifying. Your playlist may be too big. Refresh and try again`,
+            position: "top",
+            status: "error",
+            duration: 7000,
+            isClosable: true,
+          });
+          setCleanifyStatus(false);
+          return;
+        }
+        let isClean = false;
+        if (trackResponses && trackResponses.tracks.items.length > 0) {
+          for (let t of trackResponses.tracks.items) {
+            if (t && t.name && !t.explicit && containSameArtists(t, track)) {
+              if (fuzzball.distance(t.name, track.name) === 0) {
+                cleanVersionTrackIDs.push(t.uri);
+                isClean = true;
+                break;
+              } else if (fuzzball.ratio(t.name, track.name) > 1) {
+                if (potentiallyCleanSongs.has(track.name)) {
+                  potentiallyCleanSongs.get(track.name).push({
                     name: t.name,
                     link: t.external_urls.spotify,
                     uri: t.uri,
                     original_track_uri: track.uri,
                     original_track_link: track.link,
-                  },
-                ]);
+                  });
+                } else {
+                  potentiallyCleanSongs.set(track.name, [
+                    {
+                      name: t.name,
+                      link: t.external_urls.spotify,
+                      uri: t.uri,
+                      original_track_uri: track.uri,
+                      original_track_link: track.link,
+                    },
+                  ]);
+                }
               }
             }
           }
+          if (!isClean) {
+            remainingExplicitSongs.push({
+              name: track.name,
+              queryURL: `https://open.spotify.com/search/${encodeURIComponent(
+                track.query
+              )}`,
+            });
+          }
         }
-        if (!isClean) {
-          remainingExplicitSongs.push({
-            name: track.name,
-            queryURL: `https://open.spotify.com/search/${encodeURIComponent(
-              track.query
-            )}`,
-          });
+        setCleanifyProgress((index / total) * 100);
+      }
+
+      setSongsToResolve(potentiallyCleanSongs);
+
+      const newPlaylist = await createPlaylist(
+        `${playlists.items[checkedPlaylist].name} (Cleanified)`,
+        user.id
+      );
+      setPlaylists(await getPlaylists());
+
+      let allCleanSongs = [...cleanTrackIDs, ...cleanVersionTrackIDs];
+      let remainingSongs = [];
+
+      while (allCleanSongs.length > 0) {
+        remainingSongs = allCleanSongs.splice(0, 100);
+        if (remainingSongs.length > 0) {
+          await addTracksToPlaylist(newPlaylist.id, remainingSongs);
         }
       }
-      setCleanifyProgress((index / total) * 100);
+
+      setisCleanifyLoading({
+        numOriginalClean: cleanTrackIDs.length,
+        numCleanFound: cleanVersionTrackIDs.length,
+        numStillMissing: remainingExplicitSongs,
+      });
+
+      setCleanedPlaylistID(newPlaylist.id);
+      setCleanifyStatus(false);
+      toast({
+        title: `Cleanified Playlist`,
+        position: "top",
+        status: "success",
+        duration: 4000,
+        isClosable: true,
+      });
+    } catch (e) {
+      console.log("Error Cleanifying", e);
+      toast({
+        title: `Error while Cleanifying. Your playlist may be too big. Refresh and try again`,
+        position: "top",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+      });
     }
-
-    setSongsToResolve(potentiallyCleanSongs);
-
-    const newPlaylist = await createPlaylist(
-      `${playlists.items[checkedPlaylist].name} (Cleanified)`,
-      user.id
-    );
-    setPlaylists(await getPlaylists());
-
-    let allCleanSongs = [...cleanTrackIDs, ...cleanVersionTrackIDs];
-    let remainingSongs = [];
-
-    while (allCleanSongs.length > 0) {
-      remainingSongs = allCleanSongs.splice(0, 100);
-      if (remainingSongs.length > 0) {
-        await addTracksToPlaylist(newPlaylist.id, remainingSongs);
-      }
-    }
-
-    setisCleanifyLoading({
-      numOriginalClean: cleanTrackIDs.length,
-      numCleanFound: cleanVersionTrackIDs.length,
-      numStillMissing: remainingExplicitSongs,
-    });
-
-    setCleanedPlaylistID(newPlaylist.id);
-    setCleanifyStatus(false);
-    toast({
-      title: `Cleanified Playlist`,
-      position: "top",
-      status: "success",
-      duration: 4000,
-      isClosable: true,
-    });
   };
 
   return isLoading ? (
@@ -322,7 +347,7 @@ const Home = ({ code }) => {
                 color="white"
                 onClick={handleCleanify}
                 loadingText="Cleanifying"
-                isDisabled={!checkedPlaylist || !tracks}
+                isDisabled={!checkedPlaylist || gettingTracks}
               >
                 Cleanify Playlist
               </Button>
@@ -331,7 +356,7 @@ const Home = ({ code }) => {
                 onClick={handleDelete}
                 isLoading={deleteStatus}
                 loadingText="Deleting"
-                isDisabled={!checkedPlaylist || cleanifyStatus}
+                isDisabled={!checkedPlaylist || cleanifyStatus || gettingTracks}
               >
                 Delete Playlist
               </Button>
