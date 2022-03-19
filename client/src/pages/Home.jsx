@@ -35,7 +35,6 @@ export const spotifyApi = new SpotifyWebApi({
 });
 
 const Home = ({ code }) => {
-  console.log("code from url", code);
   const accessToken = useAuth(code);
   const [user, setUser] = useState();
   const { setToken, setCheckedPlaylist, songsToResolve, setSongsToResolve } =
@@ -46,7 +45,6 @@ const Home = ({ code }) => {
 
   useEffect(() => {
     if (!accessToken) return;
-    console.log("Access token trying to set", accessToken);
     spotifyApi.setAccessToken(accessToken);
     setToken(accessToken);
     spotifyApi.setAccessToken(accessToken);

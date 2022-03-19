@@ -10,17 +10,11 @@ export default function useAuth(code) {
   const { setToken } = useGlobalState();
 
   useEffect(() => {
-    // axios
-    //   .get(`${process.env.REACT_APP_CLEANIFY_BACKEND_URL}/test`, {
-    //     code: code,
-    //   })
-    //   .then((res) => console.log("Test api call result", res));
     axios
       .post(`${process.env.REACT_APP_CLEANIFY_BACKEND_URL}/login`, {
         code: code,
       })
       .then((res) => {
-        console.log("Response", res);
         setAccessToken(res.data.accessToken);
         setToken(res.data.accessToken);
         localStorage.setItem("api-key", res.data.accessToken);
@@ -30,13 +24,6 @@ export default function useAuth(code) {
         window.history.pushState({}, null, "/");
       })
       .catch((err) => {
-        console.log(
-          `Error posting to ${process.env.REACT_APP_CLEANIFY_BACKEND_URL}/login`,
-          "code is",
-          code,
-          "error is",
-          err
-        );
         window.location = "/";
       });
   }, [code, setToken]);
