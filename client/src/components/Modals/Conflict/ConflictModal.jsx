@@ -16,7 +16,7 @@ export const ConflictModal = ({ isOpen, onClose, details }) => {
     details.size === 1
       ? `is ${details.size} song that needs to be`
       : `are ${details.size} songs that need to be`
-  }  resolved. Each song title and the potential clean versions and linked below. Click on each one to decide whether or not to include them in your playlist`;
+  }  resolved. Often times, the name clean version of the song is not exactly the same as the explicit version. The names of the songs below were similar to the explicit version, but not exact. It is up to you to chose whether or not one of the suggested songs is actually the clean version. Each song title and the potential clean versions and linked below. Click on each one to decide whether or not to include them in your playlist.`;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
