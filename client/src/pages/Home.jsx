@@ -46,6 +46,7 @@ const Home = ({ code }) => {
 
   useEffect(() => {
     if (!accessToken) return;
+    console.log("Access token trying to set");
     spotifyApi.setAccessToken(accessToken);
     setToken(accessToken);
     spotifyApi.setAccessToken(accessToken);

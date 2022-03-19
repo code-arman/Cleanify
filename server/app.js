@@ -11,6 +11,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post("/api/login", (req, res) => {
+  console.log("Request recieved from post", req);
   const code = req.body.code;
   console.log(process.env.SPOTIFY_CLIENT_ID);
   const spotifyApi = new SpotifyWebApi({
@@ -35,6 +36,7 @@ app.post("/api/login", (req, res) => {
 });
 
 app.post("/api/refresh", (req, res) => {
+  console.log("Refresh token api called");
   const refreshToken = req.body.refreshToken;
   const spotifyApi = new SpotifyWebApi({
     redirectUri: process.env.CLEANIFY_FRONTEND_URL,
@@ -60,6 +62,13 @@ app.post("/api/refresh", (req, res) => {
 
 app.get("/api/test", (req, res) => {
   res.send("test");
+});
+
+app.post("/api/test", (req, res) => {
+  console.log("Request recieved from post", req);
+  const code = req.body.code;
+  console.log("Code recieved from test", code);
+  res.send("Post worked");
 });
 
 app.use(express.static(path.join(__dirname, "client/build")));

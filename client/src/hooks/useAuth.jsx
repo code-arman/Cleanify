@@ -9,10 +9,12 @@ export default function useAuth(code) {
   const [expiresIn, setExpiresIn] = useState();
   const { setToken } = useGlobalState();
 
-  console.log(
-    `backend url: [${process.env.REACT_APP_CLEANIFY_BACKEND_URL}/login]`
-  );
   useEffect(() => {
+    axios
+      .get(`${process.env.REACT_APP_CLEANIFY_BACKEND_URL}/test`, {
+        code: code,
+      })
+      .then((res) => console.log("Test api call result", res));
     axios
       .post(`${process.env.REACT_APP_CLEANIFY_BACKEND_URL}/login`, {
         code: code,
