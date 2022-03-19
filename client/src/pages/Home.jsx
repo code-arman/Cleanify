@@ -1,4 +1,4 @@
-import { Heading, Flex, VStack, Text, Center } from "@chakra-ui/layout";
+import { Flex, VStack, Center } from "@chakra-ui/layout";
 import { useCallback, useEffect, useState } from "react";
 import {
   createPlaylist,
@@ -16,6 +16,7 @@ import {
   Container,
   useToast,
   useDisclosure,
+  Box,
 } from "@chakra-ui/react";
 import PlaylistTable from "../components/Tables/PlaylistTable.jsx";
 import SongTable from "../components/Tables/SongTable.jsx";
@@ -28,6 +29,7 @@ import SpotifyWebApi from "spotify-web-api-node";
 import { ConflictModal } from "../components/Modals/Conflict/ConflictModal.jsx";
 import ProgressBar from "../components/ProgressBar.jsx";
 import { CLIENT_ID } from "../utils/Constants.jsx";
+import Header from "../components/Header.jsx";
 const fuzzball = require("fuzzball");
 
 export const spotifyApi = new SpotifyWebApi({
@@ -296,115 +298,122 @@ const Home = ({ code }) => {
   };
 
   return (
-    <Flex align="center" justify="center" p={[0, 1, 15, 15]}>
-      <VStack>
-        <Heading>Cleanify</Heading>
+    <Box>
+      <Header username={user && user.display_name} />
+      <Flex align="center" justify="center" p={[0, 1, 15, 15]}>
+        <VStack mb={5}>
+          {!user && (
+            <>
+              <Failed />
+            </>
+          )}
 
-        {user && <Text fontSize="lg">{`Username: ${user.display_name}`}</Text>}
-        {!user && (
-          <>
-            <Failed />
-          </>
-        )}
-
-        {user && (
-          <SimpleGrid spacing={[1, 3, 5, 5]} columns={[1, 1, 2, 2]}>
-            <Button
-              isLoading={cleanifyStatus}
-              colorScheme="green"
-              onClick={handleCleanify}
-              loadingText="Cleanifying"
-              isDisabled={!checkedPlaylist}
-            >
-              Cleanify Playlist
-            </Button>
-            <Button
-              colorScheme="red"
-              onClick={handleDelete}
-              isLoading={deleteStatus}
-              loadingText="Deleting"
-              isDisabled={!checkedPlaylist}
-            >
-              Delete Playlist
-            </Button>
-            {cleanedPlaylistID && (
-              <Button isDisabled={!cleanedPlaylistID} onClick={onSummaryOpen}>
-                View Summary
-              </Button>
-            )}
-            {cleanedPlaylistID && songsToResolve.size !== 0 && (
+          {user && (
+            <SimpleGrid spacing={[1, 3, 5, 5]} columns={[1, 1, 2, 2]}>
               <Button
-                isDisabled={songsToResolve.size === 0}
-                colorScheme="yellow"
-                onClick={onResolveOpen}
+                isLoading={cleanifyStatus}
+                bgColor={"#36b864"}
+                _hover={{ bgImg: "linear-gradient(rgba(0, 0, 0, 0.4) 0 0)" }}
+                color="white"
+                onClick={handleCleanify}
+                loadingText="Cleanifying"
+                isDisabled={!checkedPlaylist}
               >
-                Resolve Conflicts
+                Cleanify Playlist
               </Button>
-            )}
+              <Button
+                colorScheme="red"
+                onClick={handleDelete}
+                isLoading={deleteStatus}
+                loadingText="Deleting"
+                isDisabled={!checkedPlaylist || cleanifyStatus}
+              >
+                Delete Playlist
+              </Button>
+              {cleanedPlaylistID && (
+                <Button isDisabled={!cleanedPlaylistID} onClick={onSummaryOpen}>
+                  View Summary
+                </Button>
+              )}
+              {cleanedPlaylistID && songsToResolve.size !== 0 && (
+                <Button
+                  isDisabled={songsToResolve.size === 0}
+                  colorScheme="yellow"
+                  onClick={onResolveOpen}
+                >
+                  Resolve Conflicts
+                </Button>
+              )}
+            </SimpleGrid>
+          )}
+          {isCleanifyLoading && (
+            <SummaryModal
+              isOpen={isSummaryOpen}
+              onClose={onSummaryClose}
+              details={isCleanifyLoading}
+            />
+          )}
+          {songsToResolve && (
+            <ConflictModal
+              isOpen={isResolveOpen}
+              onClose={onResolveClose}
+              details={songsToResolve}
+            />
+          )}
+          <SimpleGrid
+            pt={7}
+            columns={[1, 1, 1, 3]}
+            alignItems="center"
+            spacing={5}
+          >
+            <Container
+              mt={["150px", 1, 1, 1]}
+              mb={[20, 1, 1, 1]}
+              h="700px"
+              width={["250px", "250px", "350px"]}
+            >
+              {user && <PlaylistTable />}
+            </Container>
+            <Container
+              mt={["150px", 1, 1, 1]}
+              mb={[20, 1, 1, 1]}
+              h="700px"
+              width={["250px", "250px", "350px"]}
+            >
+              {checkedPlaylist && (
+                <SongTable
+                  title={`Before Cleanified ${
+                    tracks ? `(${tracks.items.length} songs)` : ""
+                  }`}
+                />
+              )}
+            </Container>
+            <Container
+              mt={["150px", 1, 1, 1]}
+              mb={[20, 1, 1, 1]}
+              h="700px"
+              width={["250px", "250px", "350px"]}
+            >
+              {checkedPlaylist && cleanedPlaylistID ? (
+                <CleanSongTable
+                  title={`After Cleanified (${
+                    isCleanifyLoading.numCleanFound +
+                    isCleanifyLoading.numOriginalClean
+                  } songs)`}
+                />
+              ) : (
+                cleanifyProgress &&
+                cleanifyProgress !== 100 && (
+                  <Center h="700px" flexDir="column">
+                    <ProgressBar value={cleanifyProgress} />
+                  </Center>
+                )
+              )}
+            </Container>
           </SimpleGrid>
-        )}
-        {isCleanifyLoading && (
-          <SummaryModal
-            isOpen={isSummaryOpen}
-            onClose={onSummaryClose}
-            details={isCleanifyLoading}
-          />
-        )}
-        {songsToResolve && (
-          <ConflictModal
-            isOpen={isResolveOpen}
-            onClose={onResolveClose}
-            details={songsToResolve}
-          />
-        )}
-        <SimpleGrid columns={[1, 1, 1, 3]} alignItems="center" spacing={5}>
-          <Container
-            mt={[20, 1, 1, 1]}
-            mb={[20, 1, 1, 1]}
-            h="700px"
-            width={["200px", "300px", "400px"]}
-          >
-            {user && <PlaylistTable />}
-          </Container>
-          <Container
-            mt={["150px", 1, 1, 1]}
-            mb={[20, 1, 1, 1]}
-            h="700px"
-            width={["200px", "300px", "400px"]}
-          >
-            {checkedPlaylist && (
-              <SongTable
-                title={`Before Cleanified ${
-                  tracks ? `(${tracks.items.length} songs)` : ""
-                }`}
-              />
-            )}
-          </Container>
-          <Container
-            mt={[0, 1, 1, 1]}
-            mb={[20, 1, 1, 1]}
-            h="700px"
-            width={["200px", "300px", "400px"]}
-          >
-            {checkedPlaylist && cleanedPlaylistID ? (
-              <CleanSongTable
-                title={`After Cleanified (${
-                  isCleanifyLoading.numCleanFound +
-                  isCleanifyLoading.numOriginalClean
-                } songs)`}
-              />
-            ) : (
-              cleanifyProgress &&
-              cleanifyProgress !== 100 && (
-                <Center h="700px" flexDir="column">
-                  <ProgressBar value={cleanifyProgress} />
-                </Center>
-              )
-            )}
-          </Container>
-        </SimpleGrid>
-      </VStack>
-    </Flex>
+        </VStack>
+      </Flex>
+    </Box>
   );
 };
 

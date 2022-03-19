@@ -1,4 +1,4 @@
-import { Center, Spinner, Text } from "@chakra-ui/react";
+import { Center, Container, Spinner, Text } from "@chakra-ui/react";
 import { useMemo } from "react";
 import { useGlobalState } from "../../contexts/GlobalContext";
 import CustomTable from "./CustomTable";
@@ -23,7 +23,9 @@ const SongTable = ({ title }) => {
       <Spinner />
     </Center>
   ) : (
-    <CustomTable hasRadio={false} columns={columns} data={data} />
+    <Container p={3} boxShadow="lg" borderRadius={5}>
+      <CustomTable hasRadio={false} columns={columns} data={data} />
+    </Container>
   );
 };
 

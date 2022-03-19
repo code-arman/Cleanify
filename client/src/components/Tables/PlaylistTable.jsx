@@ -1,4 +1,4 @@
-import { Center, Radio, Spinner, Text } from "@chakra-ui/react";
+import { Center, Container, Radio, Spinner, Text } from "@chakra-ui/react";
 import { useEffect, useMemo } from "react";
 import { useGlobalState } from "../../contexts/GlobalContext";
 import { getPlaylists } from "../../utils/api";
@@ -37,12 +37,14 @@ const PlaylistTable = () => {
   );
 
   return data.length === 0 ? (
-    <Center h="700px" flexDir="column">
+    <Center p={3} boxShadow="lg" borderRadius={5} h="700px" flexDir="column">
       <Text mb={3}>Fetching playlists</Text>
       <Spinner />
     </Center>
   ) : (
-    <CustomTable columns={columns} data={data} hasRadio={true} />
+    <Container p={3} boxShadow="lg" borderRadius={5}>
+      <CustomTable columns={columns} data={data} hasRadio={true} />
+    </Container>
   );
 };
 export default PlaylistTable;

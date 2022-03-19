@@ -1,3 +1,4 @@
+import { Container } from "@chakra-ui/react";
 import { useEffect, useMemo, useState } from "react";
 import { useGlobalState } from "../../contexts/GlobalContext";
 import { getTracks } from "../../utils/api";
@@ -24,7 +25,11 @@ const CleanSongTable = ({ title }) => {
 
   cleanedTracks &&
     cleanedTracks.items.map((t) => data.push({ name: t.track.name }));
-  return <CustomTable hasRadio={false} columns={columns} data={data} />;
+  return (
+    <Container p={3} boxShadow="lg" borderRadius={5}>
+      <CustomTable hasRadio={false} columns={columns} data={data} />
+    </Container>
+  );
 };
 
 export default CleanSongTable;

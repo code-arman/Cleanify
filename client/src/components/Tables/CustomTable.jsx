@@ -50,7 +50,7 @@ function CustomTable({ columns, data, hasRadio }) {
   );
 
   return (
-    <VStack h="100%">
+    <VStack height="700px">
       <Table h="100%" {...getTableProps()}>
         <Thead>
           {headerGroups.map((headerGroup) => {
