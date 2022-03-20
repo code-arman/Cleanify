@@ -9,7 +9,7 @@ instance.interceptors.request.use((config) => {
   if (token) {
     config.headers = {
       Authorization: `Bearer ${token}`,
-      "Access-Control-Allow-Origin": "http://localhost:3000/",
+      "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Headers": "Origin",
       "Content-Type": "application/x-www-form-urlencoded",
     };
