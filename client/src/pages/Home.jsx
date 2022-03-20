@@ -325,7 +325,7 @@ const Home = ({ code }) => {
       setCleanedPlaylistID(newPlaylist.id);
       setCleanifyStatus(false);
       toast({
-        title: `${wantedExplicit ? "Explicitified" : "Cleanified"} Playlist`,
+        title: `${shouldExplicitify ? "Cleanified" : "Explicitified"} Playlist`,
         position: "top",
         status: "success",
         duration: 4000,
