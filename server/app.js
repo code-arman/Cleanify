@@ -83,5 +83,5 @@ app.listen(API_PORT, (err) => {
     console.log(err);
     return;
   }
-  console.log(`Listening on port ${API_PORT}`);
+  console.log(`Server live at ${API_PORT}`);
 });
