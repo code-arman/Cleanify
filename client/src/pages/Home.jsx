@@ -354,7 +354,7 @@ const Home = ({ code }) => {
           {user && (
             <SimpleGrid spacing={[1, 3, 5, 5]} columns={[1, 2, 3, 3]}>
               <Button
-                isLoading={cleanifyStatus}
+                isLoading={cleanifyStatus && wantedExplicit}
                 bgColor={"#36b864"}
                 _hover={{ bgImg: "linear-gradient(rgba(0, 0, 0, 0.4) 0 0)" }}
                 color="white"
@@ -365,7 +365,7 @@ const Home = ({ code }) => {
                 Cleanify Playlist
               </Button>
               <Button
-                isLoading={cleanifyStatus}
+                isLoading={cleanifyStatus && !wantedExplicit}
                 bgColor={"teal.700"}
                 _hover={{ bgImg: "linear-gradient(rgba(0, 0, 0, 0.4) 0 0)" }}
                 color="white"
