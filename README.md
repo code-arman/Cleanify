@@ -2,7 +2,7 @@
 
 ### What it does:
 
-Cleanify converts your Explicit spotify playlists into Clean spotify playlists so you can listen to your favorite playlists where ever you go!
+Cleanify converts your Explicit spotify playlists into Clean spotify playlists so you can listen to your favorite playlists where ever you go! You can also convert a playlist to only have explicit songs.
 
 ### How it works:
 
