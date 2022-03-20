@@ -11,7 +11,6 @@ instance.interceptors.request.use((config) => {
       Authorization: `Bearer ${token}`,
       "Access-Control-Allow-Origin": "http://localhost:3000/",
       "Access-Control-Allow-Headers": "Origin",
-      "Access-Control-Max-Age": 60,
       "Content-Type": "application/x-www-form-urlencoded",
     };
     config.maxBodyLength = Infinity;
