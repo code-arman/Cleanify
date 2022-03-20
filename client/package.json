@@ -1,0 +1,61 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@chakra-ui/icons": "^1.1.7",
+    "@chakra-ui/react": "^1.8.6",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
+    "@fortawesome/fontawesome-free": "^6.1.0",
+    "@mui/icons-material": "^5.5.1",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^12.0.0",
+    "@testing-library/user-event": "^13.2.1",
+    "axios": "^0.26.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.0",
+    "express-session": "^1.17.2",
+    "framer-motion": "^6",
+    "fuzzball": "^2.1.2",
+    "js-cookie": "^3.0.1",
+    "nodemon": "^2.0.15",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-icons": "^4.3.1",
+    "react-router-dom": "^6.2.2",
+    "react-scripts": "5.0.0",
+    "react-simple-oauth2-login": "^0.5.3",
+    "react-spotify-api": "^3.0.0",
+    "react-spotify-auth": "^1.4.3",
+    "react-table": "^7.7.0",
+    "request": "^2.88.2",
+    "spotify-web-api-node": "^5.0.2",
+    "vercel": "^24.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
