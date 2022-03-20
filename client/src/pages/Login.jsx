@@ -56,8 +56,8 @@ function Login() {
             fontSize={{ base: "lg", md: "xl" }}
             color={useColorModeValue("gray.600", "gray.300")}
           >
-            Cleanify allows you to easily convert your Explicit Spotify
-            playlists into Clean Spotify playlists
+            Cleanify allows you to easily create completely clean or explicit
+            versions of your Spotify playlists
           </chakra.p>
           <Stack
             direction={{ base: "column", sm: "row" }}

@@ -46,6 +46,7 @@ const Home = ({ code }) => {
   const [deleteStatus, setDeleteStatus] = useState(false);
   const [cleanifyProgress, setCleanifyProgress] = useState(false);
   const [gettingTracks, setGettingTracks] = useState(false);
+  const [wantedExplicit, setWantedExplicit] = useState(true);
 
   useEffect(() => {
     if (!accessToken) return;
@@ -124,6 +125,10 @@ const Home = ({ code }) => {
     setDeleteStatus(false);
   };
 
+  const negate = (condition, shouldNegate) => {
+    return shouldNegate ? condition : !condition;
+  };
+
   const containSameArtists = (first, second) => {
     if (first.artists.length !== second.artists.length) return false;
     let artistCount = first.artists.length;
@@ -190,16 +195,17 @@ const Home = ({ code }) => {
     }
   }, [checkedPlaylist, getAllTracks]);
 
-  const handleCleanify = async () => {
+  const handleCleanify = async (shouldExplicitify) => {
     try {
       setCleanifyStatus(true);
+      setWantedExplicit(shouldExplicitify);
 
       const cleanTrackIDs = [];
       const explicitTracks = [];
 
       for (let t of tracks.items) {
         if (!t.track) continue;
-        t && t.track && t.track.explicit
+        t && t.track && negate(t.track.explicit, shouldExplicitify)
           ? explicitTracks.push({
               query: `${t.track.name} ${t.track.artists[0].name}`,
               name: t.track.name,
@@ -233,7 +239,7 @@ const Home = ({ code }) => {
         }
         if (trackResponses instanceof Error) {
           toast({
-            title: `Error while Cleanifying. Your playlist may be too big. Refresh and try again`,
+            title: `Error while converting. Your playlist may be too big. Refresh and try again`,
             position: "top",
             status: "error",
             duration: 7000,
@@ -245,7 +251,12 @@ const Home = ({ code }) => {
         let isClean = false;
         if (trackResponses && trackResponses.tracks.items.length > 0) {
           for (let t of trackResponses.tracks.items) {
-            if (t && t.name && !t.explicit && containSameArtists(t, track)) {
+            if (
+              t &&
+              t.name &&
+              negate(!t.explicit, shouldExplicitify) &&
+              containSameArtists(t, track)
+            ) {
               if (fuzzball.distance(t.name, track.name) === 0) {
                 cleanVersionTrackIDs.push(t.uri);
                 isClean = true;
@@ -288,7 +299,9 @@ const Home = ({ code }) => {
       setSongsToResolve(potentiallyCleanSongs);
 
       const newPlaylist = await createPlaylist(
-        `${playlists.items[checkedPlaylist].name} (Cleanified)`,
+        `${playlists.items[checkedPlaylist].name} (All ${
+          shouldExplicitify ? "Clean" : "Explicit"
+        })`,
         user.id
       );
       setPlaylists(await getPlaylists());
@@ -308,20 +321,20 @@ const Home = ({ code }) => {
         numCleanFound: cleanVersionTrackIDs.length,
         numStillMissing: remainingExplicitSongs,
       });
-
+      setCheckedPlaylist(String(Number(checkedPlaylist) + 1));
       setCleanedPlaylistID(newPlaylist.id);
       setCleanifyStatus(false);
       toast({
-        title: `Cleanified Playlist`,
+        title: `${wantedExplicit ? "Explicitified" : "Cleanified"} Playlist`,
         position: "top",
         status: "success",
         duration: 4000,
         isClosable: true,
       });
     } catch (e) {
-      console.log("Error Cleanifying", e);
+      console.log("Error converting", e);
       toast({
-        title: `Error while Cleanifying. Your playlist may be too big. Refresh and try again`,
+        title: `Error while converting. Your playlist may be too big. Refresh and try again`,
         position: "top",
         status: "error",
         duration: 4000,
@@ -337,19 +350,30 @@ const Home = ({ code }) => {
       <Header username={user && user.display_name} />
       <Flex align="center" justify="center" p={[0, 1, 15, 15]}>
         <VStack mb={5}>
-          {user && <Heading size={"sm"}>Select a Playlist to Clean</Heading>}
+          {user && <Heading size={"sm"}>Select a Playlist to Convert</Heading>}
           {user && (
-            <SimpleGrid spacing={[1, 3, 5, 5]} columns={[1, 1, 2, 2]}>
+            <SimpleGrid spacing={[1, 3, 5, 5]} columns={[1, 2, 3, 3]}>
               <Button
                 isLoading={cleanifyStatus}
                 bgColor={"#36b864"}
                 _hover={{ bgImg: "linear-gradient(rgba(0, 0, 0, 0.4) 0 0)" }}
                 color="white"
-                onClick={handleCleanify}
+                onClick={() => handleCleanify(true)}
                 loadingText="Cleanifying"
                 isDisabled={!checkedPlaylist || gettingTracks}
               >
                 Cleanify Playlist
+              </Button>
+              <Button
+                isLoading={cleanifyStatus}
+                bgColor={"teal.700"}
+                _hover={{ bgImg: "linear-gradient(rgba(0, 0, 0, 0.4) 0 0)" }}
+                color="white"
+                onClick={() => handleCleanify(false)}
+                loadingText="Explicitifying"
+                isDisabled={!checkedPlaylist || gettingTracks}
+              >
+                Explicitify Playlist
               </Button>
               <Button
                 colorScheme="red"
@@ -381,6 +405,8 @@ const Home = ({ code }) => {
               isOpen={isSummaryOpen}
               onClose={onSummaryClose}
               details={isCleanifyLoading}
+              type={wantedExplicit ? "clean" : "explicit"}
+              notType={!wantedExplicit ? "clean" : "explicit"}
             />
           )}
           {songsToResolve && (
@@ -388,6 +414,8 @@ const Home = ({ code }) => {
               isOpen={isResolveOpen}
               onClose={onResolveClose}
               details={songsToResolve}
+              type={!wantedExplicit ? "explicit" : "clean"}
+              notType={wantedExplicit ? "explicit" : "clean"}
             />
           )}
           <SimpleGrid
@@ -413,7 +441,7 @@ const Home = ({ code }) => {
               >
                 {checkedPlaylist && (
                   <SongTable
-                    title={`Before Cleanified ${
+                    title={`Before ${
                       tracks ? `(${tracks.items.length} songs)` : ""
                     }`}
                   />
@@ -430,7 +458,7 @@ const Home = ({ code }) => {
               >
                 {checkedPlaylist && cleanedPlaylistID ? (
                   <CleanSongTable
-                    title={`After Cleanified (${
+                    title={`After (${
                       isCleanifyLoading.numCleanFound +
                       isCleanifyLoading.numOriginalClean
                     } songs)`}

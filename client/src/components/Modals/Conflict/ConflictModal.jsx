@@ -11,12 +11,12 @@ import {
 } from "@chakra-ui/react";
 import ConflictAccordion from "./ConflictAccordion";
 
-export const ConflictModal = ({ isOpen, onClose, details }) => {
+export const ConflictModal = ({ isOpen, onClose, details, type, notType }) => {
   const summary = `Below, there ${
     details.size === 1
       ? `is ${details.size} song that needs to be`
       : `are ${details.size} songs that need to be`
-  }  resolved. Often times, the name clean version of the song is not exactly the same as the explicit version. The names of the songs below were similar to the explicit version, but not exact. It is up to you to chose whether or not one of the suggested songs is actually the clean version. Each song title and the potential clean versions and linked below. Click on each one to decide whether or not to include them in your playlist.`;
+  }  resolved. Often times, the ${type} version of the song's name is not exactly the same as the ${notType} version. The names of the songs below were similar to the ${notType} version, but not exact. It is up to you to chose whether or not one of the suggested songs is actually the ${type} version. Each song title and the potential ${type} versions and linked below. Click on each one to decide whether or not to include them in your playlist.`;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
