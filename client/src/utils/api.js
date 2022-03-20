@@ -9,12 +9,8 @@ instance.interceptors.request.use((config) => {
   if (token) {
     config.headers = {
       Authorization: `Bearer ${token}`,
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Headers": "Origin",
       "Content-Type": "application/x-www-form-urlencoded",
     };
-    config.maxBodyLength = Infinity;
-    config.maxContentLength = Infinity;
   }
 
   return config;
