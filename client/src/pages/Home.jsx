@@ -350,7 +350,11 @@ const Home = ({ code }) => {
       <Header username={user && user.display_name} />
       <Flex align="center" justify="center" p={[0, 1, 15, 15]}>
         <VStack mb={5}>
-          {user && <Heading size={"sm"}>Select a Playlist to Convert</Heading>}
+          {user && (
+            <Heading size={"sm"} pb={2}>
+              Select a Playlist to Convert
+            </Heading>
+          )}
           {user && (
             <SimpleGrid spacing={[1, 3, 5, 5]} columns={[1, 2, 3, 3]}>
               <Button
@@ -360,7 +364,11 @@ const Home = ({ code }) => {
                 color="white"
                 onClick={() => handleCleanify(true)}
                 loadingText="Cleanifying"
-                isDisabled={!checkedPlaylist || gettingTracks}
+                isDisabled={
+                  !checkedPlaylist ||
+                  gettingTracks ||
+                  (cleanifyStatus && !wantedExplicit)
+                }
               >
                 Cleanify Playlist
               </Button>
@@ -371,7 +379,11 @@ const Home = ({ code }) => {
                 color="white"
                 onClick={() => handleCleanify(false)}
                 loadingText="Explicitifying"
-                isDisabled={!checkedPlaylist || gettingTracks}
+                isDisabled={
+                  !checkedPlaylist ||
+                  gettingTracks ||
+                  (cleanifyStatus && wantedExplicit)
+                }
               >
                 Explicitify Playlist
               </Button>

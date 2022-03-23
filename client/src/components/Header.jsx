@@ -37,7 +37,6 @@ const Header = ({ username }) => {
     axios
       .post(`${process.env.REACT_APP_CLEANIFY_BACKEND_URL}/logout`)
       .then(() => {
-        console.log("logging out");
         localStorage.removeItem("api-key");
         localStorage.setItem("logout", true);
         window.location = "/";

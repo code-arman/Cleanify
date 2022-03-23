@@ -57,6 +57,7 @@ export const createPlaylist = (playlistName, userId) =>
     instance.post(`https://api.spotify.com/v1/users/${userId}/playlists`, {
       name: playlistName,
       public: false,
+      description: `Created with www.Cleanify.app`,
     })
   );
 
