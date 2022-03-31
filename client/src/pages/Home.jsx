@@ -18,6 +18,7 @@ import {
   useDisclosure,
   Box,
   Heading,
+  Icon,
 } from "@chakra-ui/react";
 import PlaylistTable from "../components/Tables/PlaylistTable.jsx";
 import SongTable from "../components/Tables/SongTable.jsx";
@@ -30,6 +31,7 @@ import { ConflictModal } from "../components/Modals/Conflict/ConflictModal.jsx";
 import ProgressBar from "../components/ProgressBar.jsx";
 import { CLIENT_ID } from "../utils/Constants.jsx";
 import Header from "../components/Header.jsx";
+import { ExplainModal } from "../components/Modals/ExplainModal.jsx";
 const fuzzball = require("fuzzball");
 
 export const spotifyApi = new SpotifyWebApi({
@@ -60,6 +62,12 @@ const Home = ({ code }) => {
     isOpen: isSummaryOpen,
     onOpen: onSummaryOpen,
     onClose: onSummaryClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isExplainOpen,
+    onOpen: onExplainOpen,
+    onClose: onExplainClose,
   } = useDisclosure();
 
   const {
@@ -353,6 +361,8 @@ const Home = ({ code }) => {
           {user && (
             <Heading size={"sm"} pb={2}>
               Select a Playlist to Convert
+              <Icon cursor="pointer" ml={2} onClick={onExplainOpen} />
+              <ExplainModal onClose={onExplainClose} isOpen={isExplainOpen} />
             </Heading>
           )}
           {user && (
@@ -372,6 +382,7 @@ const Home = ({ code }) => {
               >
                 Cleanify Playlist
               </Button>
+
               <Button
                 isLoading={cleanifyStatus && !wantedExplicit}
                 bgColor={"teal.700"}
@@ -387,6 +398,7 @@ const Home = ({ code }) => {
               >
                 Explicitify Playlist
               </Button>
+
               <Button
                 colorScheme="red"
                 onClick={handleDelete}
@@ -396,6 +408,7 @@ const Home = ({ code }) => {
               >
                 Delete Playlist
               </Button>
+
               {cleanedPlaylistID && (
                 <Button isDisabled={!cleanedPlaylistID} onClick={onSummaryOpen}>
                   View Summary
