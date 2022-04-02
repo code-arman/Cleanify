@@ -14,7 +14,15 @@ import {
 } from "@chakra-ui/react";
 
 export const SummaryModal = ({ isOpen, onClose, details, type, notType }) => {
-  const summary = `${details.numOriginalClean} songs were already ${type}! We found the ${type} versions of ${details.numCleanFound} songs. `;
+  const summary = `${details.numOriginalClean} songs were already ${type}! We ${
+    type === "explicit"
+      ? `found the ${type} versions of ${
+          details.numCleanFound - details.numStillMissing.length
+        } songs. ${
+          details.numStillMissing.length
+        } clean songs were still added since no explicit version was found`
+      : `found the ${type} versions of ${details.numCleanFound} songs.`
+  }`;
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />

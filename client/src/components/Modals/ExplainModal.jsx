@@ -27,7 +27,7 @@ export const ExplainModal = ({ isOpen, onClose }) => {
 
           <Text pb={5}>
             {
-              "A new playlist is created and all of songs that are already Clean (non-explicit) are added. Then, it searches Spotify for the Clean versions of the explicit songs in your playlists and adds them if they exist"
+              "A new playlist is created and all of songs that are already Clean (non-explicit) are added. Then, it searches Spotify for the Clean versions of the explicit songs in your playlists and adds them if they exist. If a song has no clean version, it will not be added."
             }
           </Text>
 
@@ -37,7 +37,7 @@ export const ExplainModal = ({ isOpen, onClose }) => {
 
           <Text pb={5}>
             {
-              "A new playlist is created and all of songs that are already Explicit are added. Then, it searches Spotify for the Explicit versions of the Clean (non-explicit) songs in your playlists and adds them if they exist"
+              "A new playlist is created and all of songs that are already Explicit are added. Then, it searches Spotify for the Explicit versions of the Clean (non-explicit) songs in your playlists and adds them if they exist. If a song has no explicit version, it will still be added."
             }
           </Text>
 

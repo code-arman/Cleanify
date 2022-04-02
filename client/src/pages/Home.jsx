@@ -299,6 +299,9 @@ const Home = ({ code }) => {
                 track.query
               )}`,
             });
+            if (!shouldExplicitify) {
+              cleanVersionTrackIDs.push(track.uri);
+            }
           }
         }
         setCleanifyProgress((index / total) * 100);
@@ -307,8 +310,8 @@ const Home = ({ code }) => {
       setSongsToResolve(potentiallyCleanSongs);
 
       const newPlaylist = await createPlaylist(
-        `${playlists.items[checkedPlaylist].name} (All ${
-          shouldExplicitify ? "Clean" : "Explicit"
+        `${playlists.items[checkedPlaylist].name} (${
+          shouldExplicitify ? "All Clean" : "Explicit"
         })`,
         user.id
       );
