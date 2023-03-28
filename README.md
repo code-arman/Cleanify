@@ -11,8 +11,8 @@ A request is made to Spotify's API to search each song in the playlist. Each sea
 ### How to run locally
 
 1. Create .env file with corresponding env variables from Spotify's developer dashboard
-2. Navigate to the client directory and run `yarn && node app.js`
-3. Navigate to the server directory and run `yarn && yarn start`
+2. Navigate to the client directory and run `yarn && yarn start`
+3. Navigate to the server directory and run `yarn && node app.js`
 4. Go to http://localhost:3000
 
 #### Credit
