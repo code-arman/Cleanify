@@ -1,10 +1,10 @@
 {
   "regions": ["iad1"],
   "builds": [
-    { "src": "server/app.js", "use": "@now/node" },
+    { "src": "server/app.js", "use": "@vercel/node" },
     {
       "src": "client/package.json",
-      "use": "@now/static-build",
+      "use": "@vercel/static-build",
       "config": { "distDir": "build" }
     }
   ],
