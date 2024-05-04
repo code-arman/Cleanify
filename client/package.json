@@ -21,6 +21,7 @@
     "fuzzball": "^2.1.2",
     "js-cookie": "^3.0.1",
     "nodemon": "^2.0.15",
+    "posthog-js": "^1.130.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",

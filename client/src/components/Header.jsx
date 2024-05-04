@@ -135,76 +135,80 @@ const Header = ({ username }) => {
     </VStack>
   );
   return (
-    <Box pos='relative'>
+    <Box pos="relative">
       <chakra.header
         ref={ref}
-        shadow={y > height ? 'sm' : undefined}
-        transition='box-shadow 0.2s'
+        shadow={y > height ? "sm" : undefined}
+        transition="box-shadow 0.2s"
         bg={bg}
-        w='full'
-        overflowY='hidden'
+        w="full"
+        overflowY="hidden"
       >
         <chakra.div
-          height='40px'
-          display='flex'
-          flexDirection='col'
-          justifyContent='center'
-          alignItems='center'
-          bgColor='#36b864'
+          height="40px"
+          display="flex"
+          flexDirection="col"
+          justifyContent="center"
+          alignItems="center"
+          bgColor="#36b864"
+          _hover={{
+            textDecoration: "underline",
+            cursor: "pointer",
+            color: "white",
+          }}
         >
-          <Text
-            fontSize='sm'
-            color='white'
-            fontWeight='bold'
-            textAlign='center'
+          <a
+            href="https://github.com/code-arman/Cleanify"
+            target="_blank"
+            rel="noopener noreferrer"
+            color="white"
           >
-            <Link
-              as='u'
-              href='https://github.com/code-arman/Cleanify'
-              target='_blank'
-              rel='noopener noreferrer'
-              color='white'
+            <Text
+              fontSize="sm"
+              color="white"
+              fontWeight="bold"
+              textAlign="center"
             >
               ⭐ Star this repo on Github to support ⭐
-            </Link>
-          </Text>
+            </Text>
+          </a>
         </chakra.div>
 
-        <chakra.div h='4.5rem' mx='auto' maxW='1200px'>
-          <Flex w='full' h='full' px='6' align='center' justify='space-between'>
-            <Flex align='center'>
+        <chakra.div h="4.5rem" mx="auto" maxW="1200px">
+          <Flex w="full" h="full" px="6" align="center" justify="space-between">
+            <Flex align="center">
               <HStack>
-                <Heading size='lg'>Cleanify</Heading>
+                <Heading size="lg">Cleanify</Heading>
               </HStack>
             </Flex>
             <Flex
-              justify='flex-end'
-              w='full'
-              maxW='824px'
-              align='center'
-              color='gray.400'
+              justify="flex-end"
+              w="full"
+              maxW="824px"
+              align="center"
+              color="gray.400"
             >
-              <HStack spacing='5' display={{ base: 'none', md: 'flex' }}>
-                {username && <Text color='gray.900'>{username}</Text>}
+              <HStack spacing="5" display={{ base: "none", md: "flex" }}>
+                {username && <Text color="gray.900">{username}</Text>}
                 {ViewGithubButton}
 
                 {username && (
                   <Link
                     onClick={handleLogout}
-                    color='black'
+                    color="black"
                     as={Button}
-                    bg='white'
+                    bg="white"
                   >
                     Logout
                   </Link>
                 )}
               </HStack>
               <IconButton
-                display={{ base: 'flex', md: 'none' }}
-                aria-label='Open menu'
-                fontSize='20px'
-                color={useColorModeValue('gray.800', 'inherit')}
-                variant='ghost'
+                display={{ base: "flex", md: "none" }}
+                aria-label="Open menu"
+                fontSize="20px"
+                color={useColorModeValue("gray.800", "inherit")}
+                variant="ghost"
                 icon={<FaGripLines />}
                 onClick={mobileNav.onOpen}
               />
